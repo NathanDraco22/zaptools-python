@@ -16,8 +16,8 @@ def read(filename):
 setup(
 
     name="zaptools",
-    version="0.0.1",
-    url="https://github.com/kragniz/cookiecutter-pypackage-minimal",
+    version="0.0.2",
+    url="https://github.com/NathanDraco22/zap-adapter-python",
     license='MIT',
 
     author="Nathan Mejia",

@@ -49,7 +49,7 @@ class FastApiWebSocketAdapter():
         #---------- INIT PROTOCOL --------------
         await self.websocket.accept()
         unique_id: str = "zp+" + str(uuid4())
-        init_message = SendingModel(unique_id, "FastApi", "firstConnect", "connecting to FastApi web socket, use ZapTool package")
+        init_message = SendingModel(unique_id, "FastApi", "zap+nat-v1::aqua_indigo::", "connecting to FastApi web socket, use ZapTool package")
         await self.websocket.send_json(init_message.toJsonDict())
         confirm_data = await self.websocket.receive_json()
         
