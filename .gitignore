@@ -20,7 +20,7 @@ lib
 lib64
 personal/
 __pycache__
-main
+main.py
 
 # Installer logs
 pip-log.txt

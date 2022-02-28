@@ -22,7 +22,7 @@ class FastApiZapAdapter():
     app: FastAPI
 
     _socket_events : List[SocketEvent]  = []
-    _route: str
+    _route : str
     _adapter : FastApiWebSocketAdapter
 
     _clients_connected : List[SocketClient] = []
@@ -107,14 +107,4 @@ class FastApiZapAdapter():
         payload : any = zap_data_model.payload
         if self._on_any_event != None:
             await self._on_any_event.callback(payload , socket_client , self)
-          
-#==================================================================================
-#                                  TYPES
-# ==================================================================================
-class SocketClient():
-    id_connection : str
-    async def send_event(self, event:str ,payload : any):
-        pass
-
-
 

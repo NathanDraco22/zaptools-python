@@ -3,7 +3,7 @@ zaptools
 
 PreAlfa 2
 
-Wrapper around WebSocket to ZapTools Clients
+ZapTools is wrapper to handle websocket connection, based on events to a nice and smooth integration.
 
 Usage
 -----

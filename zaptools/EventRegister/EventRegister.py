@@ -10,9 +10,7 @@ class EventRegister():
     def on_event(self,event:str):
         def internal(my_func):
             my_func : Callable[[], Coroutine]
-
             socket_event = SocketEvent(event, my_func)
-            
             self._socket_events.append(socket_event)
         return internal
     
