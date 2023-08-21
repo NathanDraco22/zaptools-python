@@ -1,3 +1,0 @@
-
-
-from .EventRegister import EventRegister
