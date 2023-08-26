@@ -1,8 +1,8 @@
-from typing import Protocol, Coroutine, runtime_checkable
+from typing import Protocol, Coroutine, Any, runtime_checkable
 
 @runtime_checkable
 class WebSocketClient(Protocol):
-    async def send_event(self, event_name:str, payload: dict) -> Coroutine:
+    async def send_event(self, event_name:str, payload: Any) -> Coroutine:
         ...
     async def close_conection(self) -> Coroutine:
         ...
