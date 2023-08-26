@@ -88,3 +88,23 @@ class WebSocketHandler:
         result = self._register.get_callable(event.name)
         if not result: return
         await result(ctx)
+
+
+class Room:
+    id:str
+    clients : list[WebSocketClient] = []
+    _private_client: WebSocketClient|None
+
+    def __init__(self, clients:list[WebSocketClient]) -> None:
+        self.clients = clients
+        if len(clients) == 1: self._private_client = clients[0]
+        pass
+    async def notify(self, event_name:str, payload: Any):
+        if self._private_client != None:
+            await self._private_client.send_event(event_name, payload)
+            return
+        for client in self.clients:
+            await client.send_event(event_name, payload)
+
+class RoomManager:
+    pass
