@@ -80,6 +80,7 @@ class WebSocketHandler:
         await self._register.on_connected_event(client)
     
     async def trigger_on_disconnected(self):
+        if not self._register.on_disconnected_event: return
         await self._register.on_disconnected_event()
 
     async def trigger_event(self, ctx: Context):
