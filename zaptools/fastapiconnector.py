@@ -6,8 +6,8 @@ from .models import WebSocketHandler, EventFactory, Context
 class FastApiConnector:
 
     @classmethod
-    def start(cls, app, register):
-        @app.websocket("/ws")
+    def start(cls,app, register, path:str= "/" ):
+        @app.websocket(path)
         async def endpoint(ws: WebSocket):
             await ws.accept()
             client_fast = FastApiWSWrapper(ws)
@@ -21,6 +21,4 @@ class FastApiConnector:
                     ctx = Context(event= event, client= client_fast)
                     await ws_handler.trigger_event(ctx)
             except Exception as e:
-                print(e)
                 await ws_handler.trigger_on_disconnected()
-                print("---------------")
