@@ -11,7 +11,7 @@ class ZapEvent(Protocol):
     name:str
     payload:Any
 
-class Context(Protocol):
+class ZapContext(Protocol):
     event:ZapEvent
     client:ZapClient
     event_name:str
@@ -19,7 +19,7 @@ class Context(Protocol):
     client_id:str 
 
 
-CallBackContext = Callable[[Context], Coroutine]
+CallBackContext = Callable[[ZapContext], Coroutine]
 CallBackClient = Callable[[ZapClient], Coroutine]
 
 class ZapRegister(Protocol):

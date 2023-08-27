@@ -1,8 +1,8 @@
-from typing import Callable, Any, Coroutine
-from .protocols import ZapClient, ZapEvent, Context
+from typing import Any
+from .protocols import ZapClient, ZapEvent, ZapContext, ZapRegister, CallBackContext
 
 
-class Context(Context):
+class Context(ZapContext):
     def __init__(self, event: ZapEvent, client: ZapClient) -> None:
         self.event: ZapEvent = event
         self.client: ZapClient = client
@@ -17,9 +17,6 @@ class Event(ZapEvent):
         self.name: str = name
         self.payload: Any = payload
         pass
-
-CallBackContext = Callable[[Context], Coroutine]
-CallBackClient = Callable[[ZapClient], Coroutine]
 
 class EventBook:
     events: dict[str,CallBackContext] = {}
@@ -50,10 +47,10 @@ class EventFactory:
     def event_to_dict( event: Event ) -> dict[str, Any]:
         return vars(event)
     
-class EventRegister:
+class EventRegister(ZapRegister):
     _event_book : EventBook
-    def __init__(self) -> None:
-        self._event_book = EventBook()
+    def __init__(self, event_book = EventBook()) -> None:
+        self._event_book = event_book
         pass
 
     def on_connected(self, callback: CallBackContext):
@@ -93,6 +90,16 @@ class EventCaller:
         if not result: 
             return
         await result(ctx)
+
+class EventRegisterFactory:
+
+    @staticmethod
+    def mix_register(reg1: EventRegister, reg2: EventRegister):
+        events1 = reg1._event_book.events
+        events2 = reg2._event_book.events
+        new_book = EventBook()
+        new_book.events = events1|events2
+        return EventRegister(new_book)
 
 
 class Room:
