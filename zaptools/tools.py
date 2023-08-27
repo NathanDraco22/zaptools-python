@@ -18,7 +18,8 @@ class ZaptoolHelper:
 
     @classmethod
     def process_id(cls,id:str|None) -> str:
-        if id != None : return id
+        if not id: 
+            return id
         return str(f"{cls._ID_HEADING}-{uuid.uuid4()}")
     
     @classmethod
@@ -26,7 +27,7 @@ class ZaptoolHelper:
         event_name = data["name"]
         event_payload: dict = data['payload']
         conection_id = event_payload.get("id")
-        return conection_id == None and event_name == cls._INIT_EVENT_NAME
+        return conection_id is None and event_name == cls._INIT_EVENT_NAME
     
     @classmethod
     def process_init_connection(cls, data:dict) -> ConnectionIndentifier:
@@ -39,7 +40,11 @@ class ZaptoolHelper:
     @classmethod
     def process_end_connection(cls, indentifier: ConnectionIndentifier):
         event = Event(cls._END_EVENT_NAME, {})
-        return ConnectionIndentifier(indentifier.is_new, indentifier.connection_id, event)
+        return ConnectionIndentifier(
+            indentifier.is_new, 
+            indentifier.connection_id, 
+            event
+        )
 
 
 
