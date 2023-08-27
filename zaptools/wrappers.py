@@ -2,8 +2,9 @@ import json
 from typing import Any
 from fastapi import WebSocket
 from .models import Event, EventFactory
+from .protocols import ZapClient
 
-class FastApiWSWrapper:
+class FastApiWSWrapper(ZapClient):
     id:str
     def __init__(self, ws: WebSocket, id:str) -> None:
         self.wsc = ws
@@ -17,3 +18,6 @@ class FastApiWSWrapper:
 
     async def close_conection(self):
         await self.wsc.close()
+
+class AnyClient(ZapClient):
+    ...

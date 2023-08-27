@@ -1,6 +1,5 @@
-from typing import Protocol, Coroutine, Any, runtime_checkable
+from typing import Protocol, Coroutine, Any, Callable
 
-@runtime_checkable
 class ZapClient(Protocol):
     id:str
     async def send_event(self, event_name:str, payload: Any) -> Coroutine:
@@ -8,7 +7,27 @@ class ZapClient(Protocol):
     async def close_conection(self) -> Coroutine:
         ...
 
-@runtime_checkable
 class ZapEvent(Protocol):
     name:str
     payload:Any
+
+class Context(Protocol):
+    event:ZapEvent
+    client:ZapClient
+    event_name:str
+    payload:Any   
+    client_id:str 
+
+
+CallBackContext = Callable[[Context], Coroutine]
+CallBackClient = Callable[[ZapClient], Coroutine]
+
+class ZapRegister(Protocol):
+    def on_connected(self, callback: CallBackContext):
+        ...
+    
+    def on_disconnected(self, callback: CallBackContext):
+        ...
+    
+    def on_event(self, name:str):
+        ...

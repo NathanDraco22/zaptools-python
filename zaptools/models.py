@@ -1,8 +1,8 @@
 from typing import Callable, Any, Coroutine
-from .protocols import ZapClient, ZapEvent
+from .protocols import ZapClient, ZapEvent, Context
 
 
-class Context:
+class Context(Context):
     def __init__(self, event: ZapEvent, client: ZapClient) -> None:
         self.event: ZapEvent = event
         self.client: ZapClient = client
@@ -12,7 +12,7 @@ class Context:
         pass    
 
 
-class Event:
+class Event(ZapEvent):
     def __init__(self, name:str, payload:Any) -> None:
         self.name: str = name
         self.payload: Any = payload
@@ -83,13 +83,15 @@ class EventCaller:
         await self._register.on_connected_event(ctx)
     
     async def trigger_on_disconnected(self, client: Context):
-        if not self._register.on_disconnected_event: return
+        if not self._register.on_disconnected_event: 
+            return
         await self._register.on_disconnected_event(client)
 
     async def trigger_event(self, ctx: Context):
         event = ctx.event
         result = self._register.get_callable(event.name)
-        if not result: return
+        if not result: 
+            return
         await result(ctx)
 
 
@@ -100,10 +102,11 @@ class Room:
 
     def __init__(self, clients:list[ZapClient]) -> None:
         self.clients = clients
-        if len(clients) == 1: self._private_client = clients[0]
+        if len(clients) == 1: 
+            self._private_client = clients[0]
         pass
     async def notify(self, event_name:str, payload: Any):
-        if self._private_client != None:
+        if not self._private_client:
             await self._private_client.send_event(event_name, payload)
             return
         for client in self.clients:
