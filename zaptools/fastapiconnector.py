@@ -1,7 +1,7 @@
 from fastapi import WebSocket
 
 from .wrappers import FastApiWSWrapper
-from .models import EventCaller, EventFactory, Context
+from .tools import EventCaller, EventFactory, Context
 from .helpers import ZaptoolHelper
 
 class FastApiConnector:

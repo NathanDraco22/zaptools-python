@@ -1,4 +1,4 @@
-from zaptools.models import EventRegister, EventBook
+from zaptools.tools import EventRegister, EventBook
 
 def test_add_event():
     EVENT_NAME = "event_test"

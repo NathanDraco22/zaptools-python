@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from .models import Event
+from .tools import Event
 
 class ConnectionIndentifier:
     def __init__(self, is_new:bool, connection_id:str, event: Event ) -> None:
