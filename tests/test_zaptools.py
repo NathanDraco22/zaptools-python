@@ -1,10 +1,21 @@
 import json
-from websockets.sync.client import connect
+from websockets.sync.client import connect, ClientConnection
 
 SERVER_DOMAIN = "ws://localhost:8000/"
+INIT_EVENT = {
+    "name" : "init",
+    "payload" : {}
+}
+
+def _init_settings() ->  ClientConnection:
+    ws_client = connect(SERVER_DOMAIN)
+    init_data = json.dumps(INIT_EVENT)
+    ws_client.send(init_data)
+    return ws_client
+
 
 def test_welcome_message():
-    ws_client = connect(SERVER_DOMAIN)
+    ws_client = _init_settings()
     message = ws_client.recv()
     message = json.loads(message.decode())
     message = json.loads(message)
@@ -13,7 +24,7 @@ def test_welcome_message():
     pass
 
 def test_send_event():
-    ws_client = connect(SERVER_DOMAIN)
+    ws_client = _init_settings()
     ws_client.recv()
     data_to_send = json.dumps({"name": "event1", "payload":"HELLO FROM CLIENT"})
     ws_client.send(data_to_send)
@@ -26,7 +37,7 @@ def test_send_event():
     pass
 
 def test_send_event2():
-    ws_client = connect(SERVER_DOMAIN)
+    ws_client = _init_settings()
     ws_client.recv()
     data_to_send = json.dumps({"name": "event1", "payload":"HELLO FROM CLIENT"})
     ws_client.send(data_to_send)
@@ -42,7 +53,7 @@ def test_send_event2():
     pass
 
 def test_exit_event():
-    ws_client = connect(SERVER_DOMAIN)
+    ws_client = _init_settings()
     ws_client.recv()
     data_to_send = json.dumps({"name": "exit", "payload":"HELLO FROM CLIENT"})
     ws_client.send(data_to_send)
