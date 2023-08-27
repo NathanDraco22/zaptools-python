@@ -1,11 +1,11 @@
 from typing import Callable, Any, Coroutine
-from .protocols import WebSocketClient, WebSocketEvent
+from .protocols import ZapClient, ZapEvent
 
 
 class Context:
-    def __init__(self, event: WebSocketEvent, client: WebSocketClient) -> None:
-        self.event: WebSocketEvent = event
-        self.client: WebSocketClient = client
+    def __init__(self, event: ZapEvent, client: ZapClient) -> None:
+        self.event: ZapEvent = event
+        self.client: ZapClient = client
         self.event_name = event.name
         self.payload    = event.payload
         self.client_id  = client.id
@@ -19,7 +19,7 @@ class Event:
         pass
 
 CallBackContext = Callable[[Context], Coroutine]
-CallBackClient = Callable[[WebSocketClient], Coroutine]
+CallBackClient = Callable[[ZapClient], Coroutine]
 
 class EventBook:
     events: dict[str,CallBackContext] = {}
@@ -95,10 +95,10 @@ class EventCaller:
 
 class Room:
     id:str
-    clients : list[WebSocketClient] = []
-    _private_client: WebSocketClient|None
+    clients : list[ZapClient] = []
+    _private_client: ZapClient|None
 
-    def __init__(self, clients:list[WebSocketClient]) -> None:
+    def __init__(self, clients:list[ZapClient]) -> None:
         self.clients = clients
         if len(clients) == 1: self._private_client = clients[0]
         pass

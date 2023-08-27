@@ -1,7 +1,7 @@
 from typing import Protocol, Coroutine, Any, runtime_checkable
 
 @runtime_checkable
-class WebSocketClient(Protocol):
+class ZapClient(Protocol):
     id:str
     async def send_event(self, event_name:str, payload: Any) -> Coroutine:
         ...
@@ -9,6 +9,6 @@ class WebSocketClient(Protocol):
         ...
 
 @runtime_checkable
-class WebSocketEvent(Protocol):
+class ZapEvent(Protocol):
     name:str
     payload:str
