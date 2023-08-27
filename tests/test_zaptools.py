@@ -58,8 +58,8 @@ def test_exit_event():
     data_to_send = json.dumps({"name": "exit", "payload":"HELLO FROM CLIENT"})
     ws_client.send(data_to_send)
     try:
-        message = ws_client.recv(timeout=1)
+        ws_client.recv(timeout=1)
         assert False, "Connection not closed"
-    except:
+    except Exception:
         assert True, "Connection Closed"
     pass
