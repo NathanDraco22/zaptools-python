@@ -2,7 +2,7 @@ from typing import Protocol, Coroutine, Any, runtime_checkable
 
 @runtime_checkable
 class WebSocketClient(Protocol):
-    id:str|None
+    id:str
     async def send_event(self, event_name:str, payload: Any) -> Coroutine:
         ...
     async def close_conection(self) -> Coroutine:
