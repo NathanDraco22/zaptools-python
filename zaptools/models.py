@@ -13,9 +13,9 @@ class Context:
 
 
 class Event:
-    def __init__(self, name:str, payload:dict) -> None:
+    def __init__(self, name:str, payload:Any) -> None:
         self.name: str = name
-        self.payload: str = payload
+        self.payload: Any = payload
         pass
 
 CallBackContext = Callable[[Context], Coroutine]

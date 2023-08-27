@@ -11,4 +11,4 @@ class ZapClient(Protocol):
 @runtime_checkable
 class ZapEvent(Protocol):
     name:str
-    payload:str
+    payload:Any
