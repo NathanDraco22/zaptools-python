@@ -31,11 +31,9 @@ class ZaptoolHelper:
     
     @classmethod
     def process_init_connection(cls, data:dict) -> ConnectionIndentifier:
-        print(data)
         is_new_connection = cls.check_is_new_connection(data)
         payload_id = data.get("payload").get("id")
         connection_id = cls.process_id(payload_id)
-        print(connection_id)
         init_event = Event(cls._INIT_EVENT_NAME, data["payload"])
         return ConnectionIndentifier(is_new_connection, connection_id, init_event)
     

@@ -19,7 +19,10 @@ class Event(ZapEvent):
         pass
 
 class EventBook:
-    events: dict[str,CallBackContext] = {}
+    events: dict[str,CallBackContext]
+
+    def __init__(self) -> None:
+        self.events = {}
 
     on_connected_event: CallBackContext|None= None
     on_disconnected_event: CallBackContext|None= None
