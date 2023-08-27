@@ -4,9 +4,10 @@ from fastapi import WebSocket
 from .models import Event, EventFactory
 
 class FastApiWSWrapper:
-    id:str|None
-    def __init__(self, ws: WebSocket) -> None:
+    id:str
+    def __init__(self, ws: WebSocket, id:str) -> None:
         self.wsc = ws
+        self.id = id
     
     async def send_event(self, event_name:str, payload: Any):
         new_event = Event(event_name, payload)

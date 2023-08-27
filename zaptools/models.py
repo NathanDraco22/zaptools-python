@@ -6,6 +6,9 @@ class Context:
     def __init__(self, event: WebSocketEvent, client: WebSocketClient) -> None:
         self.event: WebSocketEvent = event
         self.client: WebSocketClient = client
+        self.event_name = event.name
+        self.payload    = event.payload
+        self.client_id  = client.id
         pass    
 
 
@@ -21,7 +24,7 @@ CallBackClient = Callable[[WebSocketClient], Coroutine]
 class EventBook:
     events: dict[str,CallBackContext] = {}
 
-    on_connected_event: CallBackClient|None= None
+    on_connected_event: CallBackContext|None= None
     on_disconnected_event: Callable|None= None
 
     def regis_event(self, name:str, callback:CallBackContext):
@@ -71,17 +74,17 @@ class EventRegister:
         return wrapper
 
 
-class WebSocketHandler:
+class EventCaller:
 
     def add_register(self, register: EventRegister):
         self._register = register._event_book
     
-    async def trigger_on_connected(self, client: WebSocketClient):
-        await self._register.on_connected_event(client)
+    async def trigger_on_connected(self, ctx: Context):
+        await self._register.on_connected_event(ctx)
     
-    async def trigger_on_disconnected(self):
+    async def trigger_on_disconnected(self, client: WebSocketClient):
         if not self._register.on_disconnected_event: return
-        await self._register.on_disconnected_event()
+        await self._register.on_disconnected_event(client)
 
     async def trigger_event(self, ctx: Context):
         event = ctx.event
