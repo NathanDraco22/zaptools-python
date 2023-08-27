@@ -1,7 +1,8 @@
 import json
 from typing import Any
 from fastapi import WebSocket
-from .tools import Event, EventFactory
+from .tools import Event
+from .factories import EventFactory
 from .protocols import ZapClient
 
 class FastApiWSWrapper(ZapClient):
