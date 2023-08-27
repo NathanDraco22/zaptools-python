@@ -25,5 +25,6 @@ class FastApiConnector:
                     ctx = Context(event= event, client= client_fast)
                     await event_caller.trigger_event(ctx)
             except Exception as e:
-                print(e)
-                await event_caller.trigger_on_disconnected(client_fast)
+                end_indentifier = ZaptoolHelper.process_end_connection(identifier)
+                ctx = Context(end_indentifier.event, client_fast)
+                await event_caller.trigger_on_disconnected(ctx)

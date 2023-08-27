@@ -25,7 +25,7 @@ class EventBook:
     events: dict[str,CallBackContext] = {}
 
     on_connected_event: CallBackContext|None= None
-    on_disconnected_event: Callable|None= None
+    on_disconnected_event: CallBackContext|None= None
 
     def regis_event(self, name:str, callback:CallBackContext):
         self.events[name] = callback 
@@ -82,7 +82,7 @@ class EventCaller:
     async def trigger_on_connected(self, ctx: Context):
         await self._register.on_connected_event(ctx)
     
-    async def trigger_on_disconnected(self, client: WebSocketClient):
+    async def trigger_on_disconnected(self, client: Context):
         if not self._register.on_disconnected_event: return
         await self._register.on_disconnected_event(client)
 

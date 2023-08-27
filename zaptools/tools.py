@@ -13,6 +13,7 @@ class ConnectionIndentifier:
 class ZaptoolHelper:
     
     _INIT_EVENT_NAME = "init"
+    _END_EVENT_NAME = "end"
     _ID_HEADING = "zpt"
 
     @classmethod
@@ -28,10 +29,17 @@ class ZaptoolHelper:
         return conection_id == None and event_name == cls._INIT_EVENT_NAME
     
     @classmethod
-    def process_init_connection(cls, data:dict):
+    def process_init_connection(cls, data:dict) -> ConnectionIndentifier:
         is_new_connection = cls.check_is_new_connection(data)
         payload_id = data.get("payload").get("id")
         connection_id = cls.process_id(payload_id)
         init_event = Event(cls._INIT_EVENT_NAME, data["payload"])
         return ConnectionIndentifier(is_new_connection, connection_id, init_event)
+    
+    @classmethod
+    def process_end_connection(cls, indentifier: ConnectionIndentifier):
+        event = Event(cls._END_EVENT_NAME, {})
+        return ConnectionIndentifier(indentifier.is_new, indentifier.connection_id, event)
+
+
 
