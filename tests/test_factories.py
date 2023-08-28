@@ -2,7 +2,6 @@ from zaptools.factories import EventFactory, EventBookFactory, EventRegisterFact
 from zaptools.tools import Event, EventBook, EventRegister
 
 
-
 def test_event_factory_to_dict():
     event = Event("winter", "snow")
     event_dict = EventFactory.event_to_dict(event)
