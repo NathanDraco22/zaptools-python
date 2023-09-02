@@ -31,3 +31,23 @@ class ZapRegister(Protocol):
     
     def on_event(self, name:str):
         ...
+
+class IDManager(Protocol):
+
+    def process_id(id: str|None) -> str:
+        ...
+
+class ConnectionIndentifier(Protocol):
+    is_new :bool
+    connection_id :str 
+    event: ZapEvent
+
+class ConnectionVerifier(Protocol):
+    def check_is_new_connection(cls,data:Any)->bool:
+        ...
+    
+    def process_init_connection(cls, data:dict) -> ConnectionIndentifier:
+        ...
+    
+    def process_end_connection(cls, indentifier: ConnectionIndentifier):
+        ...
