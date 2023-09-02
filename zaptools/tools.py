@@ -1,5 +1,12 @@
 from typing import Any
-from .protocols import ZapClient, ZapEvent, ZapContext, ZapRegister, CallBackContext
+from .protocols import (
+    ZapClient, 
+    ZapEvent, 
+    ZapContext, 
+    ZapRegister, 
+    CallBackContext, 
+    ZapEventCaller
+)
 
 
 class Context(ZapContext):
@@ -61,7 +68,7 @@ class EventRegister(ZapRegister):
         return wrapper
 
 
-class EventCaller:
+class EventCaller(ZapEventCaller):
 
     def add_register(self, register: EventRegister):
         self._register = register._event_book

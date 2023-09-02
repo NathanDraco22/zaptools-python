@@ -11,6 +11,7 @@ class ZapEvent(Protocol):
     name:str
     payload:Any
 
+
 class ZapContext(Protocol):
     event:ZapEvent
     client:ZapClient
@@ -30,6 +31,20 @@ class ZapRegister(Protocol):
         ...
     
     def on_event(self, name:str):
+        ...
+
+
+class ZapEventCaller(Protocol):
+    def add_register(self, register: ZapRegister):
+        ...
+    
+    async def trigger_on_connected(self, ctx: ZapContext):
+        ...
+    
+    async def trigger_on_disconnected(self, client: ZapContext):
+        ...
+
+    async def trigger_event(self, ctx: ZapContext):
         ...
 
 class IDManager(Protocol):
