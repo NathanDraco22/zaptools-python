@@ -1,6 +1,6 @@
 from fastapi import WebSocket
 
-from .wrappers import FastApiWSWrapper
+from .wrappers import FastApiWSConn
 from .tools import EventCaller, Context
 from .factories import EventFactory
 from .helpers import ZaptoolHelper
@@ -14,7 +14,7 @@ class FastApiConnector:
             await ws.accept()
             data = await ws.receive_json()
             identifier = ZaptoolHelper.process_init_connection(data)
-            client_fast = FastApiWSWrapper(ws, identifier.connection_id)
+            client_fast = FastApiWSConn(ws, identifier.connection_id)
             event_caller = EventCaller()
             event_caller.add_register(register)
             ctx = Context(identifier.event, client_fast)

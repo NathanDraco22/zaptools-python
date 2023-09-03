@@ -4,7 +4,7 @@ from .tools import Event
 from .factories import EventFactory
 from .protocols import ZapWebSocketConnection
 
-class FastApiWSWrapper(ZapWebSocketConnection):
+class FastApiWSConn(ZapWebSocketConnection):
     id:str
     def __init__(self, websocket: Any, id:str) -> None:
         self.wsc = websocket
