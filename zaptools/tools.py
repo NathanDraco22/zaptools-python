@@ -3,7 +3,7 @@ from .protocols import (
     ZapWebSocketConnection, 
     ZapEvent, 
     ZapContext, 
-    ZapRegister, 
+    ZapEventRegister, 
     CallBackContext, 
     ZapEventCaller
 )
@@ -44,7 +44,7 @@ class EventBook:
         stored_callable = self.events.get(name) 
         return stored_callable
     
-class EventRegister(ZapRegister):
+class EventRegister(ZapEventRegister):
     _event_book : EventBook
     def __init__(self, event_book = EventBook()) -> None:
         self._event_book = event_book

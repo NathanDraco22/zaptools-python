@@ -23,7 +23,7 @@ class ZapContext(Protocol):
 CallBackContext = Callable[[ZapContext], Coroutine]
 CallBackClient = Callable[[ZapWebSocketConnection], Coroutine]
 
-class ZapRegister(Protocol):
+class ZapEventRegister(Protocol):
     def on_connected(self, callback: CallBackContext):
         ...
     
@@ -35,7 +35,7 @@ class ZapRegister(Protocol):
 
 
 class ZapEventCaller(Protocol):
-    def add_register(self, register: ZapRegister):
+    def add_register(self, register: ZapEventRegister):
         ...
     
     async def trigger_on_connected(self, ctx: ZapContext):
@@ -82,3 +82,6 @@ class ZapConnectionVerifier(Protocol):
     
     def process_end_connection(cls, indentifier: ZapConnectionIndentifier):
         ...
+    
+class ZapConnectionAuditor(IDManager, ZapConnectionVerifier, Protocol):
+    ...

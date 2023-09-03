@@ -9,11 +9,12 @@ class FastApiConnector:
 
     @classmethod
     def start(cls,app, register, path:str= "/" ):
+        zap_helper = ZaptoolHelper()
         @app.websocket(path)
         async def endpoint(ws: WebSocket):
             await ws.accept()
             data = await ws.receive_json()
-            identifier = ZaptoolHelper.process_init_connection(data)
+            identifier = zap_helper.process_init_connection(data)
             client_fast = FastApiWSConn(ws, identifier.connection_id)
             event_caller = EventCaller()
             event_caller.add_register(register)
@@ -26,6 +27,6 @@ class FastApiConnector:
                     ctx = Context(event= event, client= client_fast)
                     await event_caller.trigger_event(ctx)
             except Exception:
-                end_indentifier = ZaptoolHelper.process_end_connection(identifier)
+                end_indentifier = zap_helper.process_end_connection(identifier)
                 ctx = Context(end_indentifier.event, client_fast)
                 await event_caller.trigger_on_disconnected(ctx)
