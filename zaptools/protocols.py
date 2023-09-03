@@ -1,6 +1,6 @@
 from typing import Protocol, Coroutine, Any, Callable
 
-class ZapClient(Protocol):
+class ZapWebSocketConnection(Protocol):
     id:str
     async def send_event(self, event_name:str, payload: Any) -> Coroutine:
         ...
@@ -14,14 +14,14 @@ class ZapEvent(Protocol):
 
 class ZapContext(Protocol):
     event:ZapEvent
-    client:ZapClient
+    client:ZapWebSocketConnection
     event_name:str
     payload:Any   
     client_id:str 
 
 
 CallBackContext = Callable[[ZapContext], Coroutine]
-CallBackClient = Callable[[ZapClient], Coroutine]
+CallBackClient = Callable[[ZapWebSocketConnection], Coroutine]
 
 class ZapRegister(Protocol):
     def on_connected(self, callback: CallBackContext):
@@ -47,22 +47,38 @@ class ZapEventCaller(Protocol):
     async def trigger_event(self, ctx: ZapContext):
         ...
 
+class ZapEventBook:
+    events: dict[str,CallBackContext]
+
+    on_connected_event: CallBackContext|None= None
+    on_disconnected_event: CallBackContext|None= None
+
+    def regis_event(self, name:str, callback:CallBackContext):
+        ...
+    
+    def del_event(self, name:str):
+        ...
+    
+    def get_callable(self, name:str) -> CallBackContext|None:
+        ...
+    
+
 class IDManager(Protocol):
 
     def process_id(id: str|None) -> str:
         ...
 
-class ConnectionIndentifier(Protocol):
+class ZapConnectionIndentifier(Protocol):
     is_new :bool
     connection_id :str 
     event: ZapEvent
 
-class ConnectionVerifier(Protocol):
+class ZapConnectionVerifier(Protocol):
     def check_is_new_connection(cls,data:Any)->bool:
         ...
     
-    def process_init_connection(cls, data:dict) -> ConnectionIndentifier:
+    def process_init_connection(cls, data:dict) -> ZapConnectionIndentifier:
         ...
     
-    def process_end_connection(cls, indentifier: ConnectionIndentifier):
+    def process_end_connection(cls, indentifier: ZapConnectionIndentifier):
         ...

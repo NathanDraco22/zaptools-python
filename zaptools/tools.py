@@ -1,6 +1,6 @@
 from typing import Any
 from .protocols import (
-    ZapClient, 
+    ZapWebSocketConnection, 
     ZapEvent, 
     ZapContext, 
     ZapRegister, 
@@ -10,9 +10,9 @@ from .protocols import (
 
 
 class Context(ZapContext):
-    def __init__(self, event: ZapEvent, client: ZapClient) -> None:
+    def __init__(self, event: ZapEvent, client: ZapWebSocketConnection) -> None:
         self.event: ZapEvent = event
-        self.client: ZapClient = client
+        self.client: ZapWebSocketConnection = client
         self.event_name = event.name
         self.payload    = event.payload
         self.client_id  = client.id
@@ -90,10 +90,10 @@ class EventCaller(ZapEventCaller):
 
 class Room:
     id:str
-    clients : list[ZapClient] = []
-    _private_client: ZapClient|None
+    clients : list[ZapWebSocketConnection] = []
+    _private_client: ZapWebSocketConnection|None
 
-    def __init__(self, clients:list[ZapClient]) -> None:
+    def __init__(self, clients:list[ZapWebSocketConnection]) -> None:
         self.clients = clients
         if len(clients) == 1: 
             self._private_client = clients[0]
