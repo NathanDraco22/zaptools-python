@@ -38,12 +38,18 @@ class ZaptoolHelper(ZapConnectionAuditor):
         init_event = Event(self._INIT_EVENT_NAME, data["payload"])
         return ConnectionIndentifier(is_new_connection, connection_id, init_event)
     
-    
-    def process_end_connection(self, indentifier: ConnectionIndentifier):
+    def proccess_loop_connection(self, identifier: ConnectionIndentifier, event: Event):
+        return ConnectionIndentifier(
+            identifier.is_new,
+            identifier.connection_id,
+            event
+        )
+
+    def process_end_connection(self, identifier: ConnectionIndentifier):
         event = Event(self._END_EVENT_NAME, {})
         return ConnectionIndentifier(
-            indentifier.is_new, 
-            indentifier.connection_id, 
+            identifier.is_new, 
+            identifier.connection_id, 
             event
         )
 

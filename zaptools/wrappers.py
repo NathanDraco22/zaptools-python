@@ -2,9 +2,9 @@ import json
 from typing import Any
 from .tools import Event
 from .factories import EventFactory
-from .protocols import ZapWebSocketConnection
+from .protocols import WebSocketConnection
 
-class FastApiWSConn(ZapWebSocketConnection):
+class FastApiWSConn(WebSocketConnection):
     id:str
     def __init__(self, websocket: Any, id:str) -> None:
         self.wsc = websocket
@@ -19,7 +19,7 @@ class FastApiWSConn(ZapWebSocketConnection):
     async def close_conection(self):
         await self.wsc.close()
 
-class StarWSConn(ZapWebSocketConnection):
+class StarWSConn(WebSocketConnection):
     id:str
     def __init__(self, websocket: Any, id:str) -> None:
         self.wsc = websocket

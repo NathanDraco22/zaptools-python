@@ -1,25 +1,34 @@
 from typing import Any
 from .protocols import (
-    ZapWebSocketConnection, 
-    ZapEvent, 
-    ZapContext, 
+    WebSocketConnection, 
+    Event, 
+    EventContext, 
     ZapEventRegister, 
     CallBackContext, 
-    ZapEventCaller
+    ZapEventCaller,
+    ConnectionWrapper,
+    ConnectionIndentifier
 )
 
+class Connection(WebSocketConnection):
+    def __init__(self,id :str, conn_wrapper : ConnectionWrapper) -> None:
+        self.id=       id
+        self._wrapper= conn_wrapper
 
-class Context(ZapContext):
-    def __init__(self, event: ZapEvent, client: ZapWebSocketConnection) -> None:
-        self.event: ZapEvent = event
-        self.client: ZapWebSocketConnection = client
-        self.event_name = event.name
-        self.payload    = event.payload
-        self.client_id  = client.id
+class Context(EventContext):
+    def __init__(self, 
+        conn_wrapper: ConnectionWrapper, 
+        conn_identifier: ConnectionIndentifier
+    ) -> None:
+        self.connection=    Connection(conn_identifier.connection_id, conn_wrapper)
+        self.event=         conn_identifier.event
+        self.connection_id= conn_identifier.connection_id
+        self.payload=       conn_identifier.event.payload
+        self.event_name=    conn_identifier.event.name
         pass    
 
 
-class Event(ZapEvent):
+class Event(Event):
     def __init__(self, name:str, payload:Any) -> None:
         self.name: str = name
         self.payload: Any = payload
@@ -73,15 +82,15 @@ class EventCaller(ZapEventCaller):
     def add_register(self, register: EventRegister):
         self._register = register._event_book
     
-    async def trigger_on_connected(self, ctx: Context):
+    async def trigger_on_connected(self, ctx: EventContext):
         await self._register.on_connected_event(ctx)
     
-    async def trigger_on_disconnected(self, client: Context):
+    async def trigger_on_disconnected(self, client: EventContext):
         if not self._register.on_disconnected_event: 
             return
         await self._register.on_disconnected_event(client)
 
-    async def trigger_event(self, ctx: Context):
+    async def trigger_event(self, ctx: EventContext):
         event = ctx.event
         result = self._register.get_callable(event.name)
         if not result: 
@@ -90,10 +99,10 @@ class EventCaller(ZapEventCaller):
 
 class Room:
     id:str
-    clients : list[ZapWebSocketConnection] = []
-    _private_client: ZapWebSocketConnection|None
+    clients : list[WebSocketConnection] = []
+    _private_client: WebSocketConnection|None
 
-    def __init__(self, clients:list[ZapWebSocketConnection]) -> None:
+    def __init__(self, clients:list[WebSocketConnection]) -> None:
         self.clients = clients
         if len(clients) == 1: 
             self._private_client = clients[0]
