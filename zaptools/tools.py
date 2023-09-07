@@ -25,6 +25,8 @@ class Context(EventContext):
         self.connection_id= conn_identifier.connection_id
         self.payload=       conn_identifier.event.payload
         self.event_name=    conn_identifier.event.name
+        self.conn_identifier= conn_identifier
+        self.conn_wrapper = conn_wrapper
         pass    
 
 
@@ -78,6 +80,8 @@ class EventRegister(ZapEventRegister):
 
 
 class EventCaller(ZapEventCaller):
+
+    _register:EventBook
 
     def add_register(self, register: EventRegister):
         self._register = register._event_book

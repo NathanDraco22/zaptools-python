@@ -2,9 +2,10 @@ import json
 from typing import Any
 from fastapi import WebSocket
 
-from .tools import EventCaller, Event, Context
+from .tools import Event, Context, EventRegister
 from .factories import EventFactory
 from .helpers import ZaptoolHelper
+from .connector import ZapToolConnector
 
 class MyWrapper():
     def __init__(self, websocket : WebSocket) -> None:
@@ -22,30 +23,22 @@ class MyWrapper():
 class FastApiConnector:
 
     @classmethod
-    def start(cls,app, register , path:str= "/" ):
-       
+    def start(cls,app, register: EventRegister , path:str= "/" ):
+        zaptool_connector = ZapToolConnector(register)
         zap_helper = ZaptoolHelper()
         @app.websocket(path)
         async def endpoint(ws: WebSocket):
             await ws.accept()
-            conn_wrapper = MyWrapper(ws)
             data = await ws.receive_json()
-            identifier = zap_helper.process_init_connection(data)
-            event_caller = EventCaller()
-            event_caller.add_register(register)
-            ctx = Context(conn_wrapper, identifier)
+            event_caller, ctx = zaptool_connector.verify_init_data(data, ws)
+            identifier = ctx.conn_identifier
             await event_caller.trigger_on_connected(ctx)
             try: 
                 while True:
                     data = await ws.receive_json()
-                    event = EventFactory.from_dict(data)
-                    loop_identifier = zap_helper.proccess_loop_connection(
-                        identifier, 
-                        event
-                    )
-                    ctx = Context(conn_wrapper, loop_identifier)
-                    await event_caller.trigger_event(ctx)
-            except Exception:
+                    await zaptool_connector.process_loop_data(ctx, data)
+            except Exception as e:
+                print(e)
                 end_indentifier = zap_helper.process_end_connection(identifier)
-                ctx = Context(conn_wrapper, end_indentifier)
+                ctx = Context(ctx.conn_wrapper, end_indentifier)
                 await event_caller.trigger_on_disconnected(ctx)
