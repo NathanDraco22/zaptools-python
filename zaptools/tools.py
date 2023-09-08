@@ -83,6 +83,9 @@ class EventCaller(ZapEventCaller):
 
     _register:EventBook
 
+    def __init__(self, register:EventRegister) -> None:
+        self._register = register._event_book
+
     def add_register(self, register: EventRegister):
         self._register = register._event_book
     

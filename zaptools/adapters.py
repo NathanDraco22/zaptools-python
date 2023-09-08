@@ -1,7 +1,9 @@
 from typing import Any
 
+EVENT_KEY= "eventName"
+PAYLOAD_KEY = "payload"
 
-class MyWrapper:
+class FastApiAdapter:
 
     websocket:Any
 
@@ -16,8 +18,8 @@ class MyWrapper:
 
     async def send_event(self, event_name:str, payload:dict[str, Any]):
         json_dict = {
-            "eventName" : event_name,
-            "payload" : payload
+            EVENT_KEY : event_name,
+            PAYLOAD_KEY : payload
         }
         await self.websocket.send_json(json_dict)
     

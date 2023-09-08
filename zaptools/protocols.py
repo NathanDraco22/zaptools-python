@@ -1,6 +1,11 @@
 from typing import Protocol, Coroutine, Any, Callable
 
 class ConnectionWrapper(Protocol):
+    websocket: Any
+
+    def __init__(self, websocket) -> None:
+        self.websocket = websocket
+        
     async def send_event(self, event_name:str, payload: Any) -> Coroutine:
         ...
     async def close_conection(self) -> Coroutine:

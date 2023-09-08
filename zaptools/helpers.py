@@ -18,7 +18,7 @@ class ZaptoolHelper(ZapConnectionAuditor):
     _ID_HEADING = "zpt"
 
     
-    def process_id(self,id:str|None) -> str:
+    def process_id(self,id:str|None = None) -> str:
         if id: 
             return id
         return str(f"{self._ID_HEADING}-{uuid.uuid4()}")
