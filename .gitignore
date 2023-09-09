@@ -37,3 +37,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+zap
+server.py
+sanic_server.py
+starlette_server.py

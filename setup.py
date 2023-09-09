@@ -14,9 +14,8 @@ def read(filename):
 
 
 setup(
-
     name="zaptools",
-    version="0.0.2",
+    version="0.0.5",
     url="https://github.com/NathanDraco22/zap-adapter-python",
     license='MIT',
 
@@ -33,15 +32,12 @@ setup(
         "zaptools.EventRegister",
         "zaptools.models"
     ],
-
     install_requires=[],
-
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Pre-Alpha',
+        'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
 )
