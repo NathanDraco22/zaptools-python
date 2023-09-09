@@ -1,6 +1,6 @@
 import uuid
 from typing import Callable, Any
-from .protocols_v2 import ConnectionAdapter
+from .protocols import ConnectionAdapter
 
 class Event:
     def __init__(self, name:str, callback: Callable) -> None:
