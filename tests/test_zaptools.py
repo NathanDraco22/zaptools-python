@@ -61,7 +61,7 @@ def test_send_event1_event2():
 def test_exit():
     client = _init_settings()
     request_data = {
-        "eventName": "event1",
+        "eventName": "exit",
         "payload": {"hello":"from client"}
     }
     json_string = json.dumps(request_data)
