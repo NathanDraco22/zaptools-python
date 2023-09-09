@@ -111,11 +111,12 @@ class EventProcessor:
         ctx = Context(EVENT_NAME, {}, self._connection)
         await self._event_caller.trigger_event(ctx)
     
-    async def intercept(self):
+    async def receive_events(self):
         data = await self._adapter.recv_json()
-        print(data)
-        print(type(data))
-        
+        ctx = Context(data["eventName"], data["payload"], self._connection)
+        await self._event_caller.trigger_event(ctx)
+    
+    async def intercept_data(self, data: dict[str,Any]):
         ctx = Context(data["eventName"], data["payload"], self._connection)
         await self._event_caller.trigger_event(ctx)
 

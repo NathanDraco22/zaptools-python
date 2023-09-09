@@ -13,7 +13,7 @@ class ConnectionAdapter(Protocol):
     async def recv_json(self) -> dict[str, Any]:
         ...
     
-    async def send_event(self, event_name:str, payload:dict[str, Any]):
+    async def send_event(self, event_name:str, payload:Any):
         ...
     
     async def close(self):
