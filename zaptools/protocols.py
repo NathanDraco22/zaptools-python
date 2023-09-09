@@ -1,4 +1,4 @@
-from typing import Protocol, Any
+from typing import Protocol, Any, Callable
 
 class ConnectionAdapter(Protocol):
 
@@ -19,6 +19,18 @@ class ConnectionAdapter(Protocol):
     async def close(self):
         ...
 
+class Event(Protocol):
+    name: str
+    callback: Callable
+
+class EventBook(Protocol):
+    event_records: dict[str, Event]
+
+    def save_event(self, event: Event):
+        ...
+
+    def get_event(self, name:str) -> Event|None:
+        ...
 
 class IDController(Protocol):
     _ID_HEADING = "zpt"
