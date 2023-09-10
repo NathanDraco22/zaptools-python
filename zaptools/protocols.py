@@ -1,4 +1,4 @@
-from typing import Protocol, Any, Callable
+from typing import Protocol, Any, Callable, AsyncIterator
 
 class ConnectionAdapter(Protocol):
 
@@ -11,6 +11,9 @@ class ConnectionAdapter(Protocol):
         ...
 
     async def recv_json(self) -> dict[str, Any]:
+        ...
+    
+    async def json_event_stream(self) -> AsyncIterator:
         ...
     
     async def send_event(self, event_name:str, payload:Any):

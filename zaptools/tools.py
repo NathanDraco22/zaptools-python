@@ -119,6 +119,14 @@ class EventProcessor:
     async def intercept_data(self, data: dict[str,Any]):
         ctx = Context(data["eventName"], data["payload"], self._connection)
         await self._event_caller.trigger_event(ctx)
+    
+    async def start_event_stream(self):
+        await self.notify_connected()
+        try:
+            async for data in self._adapter.json_event_stream():
+                await self.intercept_data(data)
+        except Exception:
+            await self.notify_disconnected()
 
 
 
