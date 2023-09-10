@@ -1,16 +1,8 @@
-import io
-import os
-import re
-
-from setuptools import find_packages
 from setuptools import setup
 
 
-def read(filename):
-    filename = os.path.join(os.path.dirname(__file__), filename)
-    text_type = type(u"")
-    with io.open(filename, mode="r", encoding='utf-8') as fd:
-        return re.sub(text_type(r':[a-z]+:`~?(.*?)`'), text_type(r'``\1``'), fd.read())
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 
 setup(
@@ -23,18 +15,16 @@ setup(
     author_email="nathandraco22@gmail.com",
 
     description="Python Implementation to ZapTools WebSockets",
-    long_description=read("README.rst"),
+    long_description=long_description,
 
     packages=[
         "zaptools",
-        "zaptools.FastApi",
-        "zaptools.customtypes",
-        "zaptools.EventRegister",
-        "zaptools.models"
+        "zaptools.tools",
+        "zaptools.adapters"
     ],
     install_requires=[],
     classifiers=[
-        'Development Status :: 3 - Pre-Alpha',
+        'Development Status :: 5 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
