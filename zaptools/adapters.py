@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, AsyncIterator
 import json
 
 EVENT_KEY= "eventName"
@@ -23,6 +23,10 @@ class FastApiAdapter:
             PAYLOAD_KEY : payload
         }
         await self.websocket.send_json(json_dict)
+    
+    async def json_event_stream(self) -> AsyncIterator[Any]:
+        async for data in self.websocket.iter_json():
+            yield data
     
     async def close(self):
         await self.websocket.close()
@@ -52,3 +56,9 @@ class SanicAdapter:
     
     async def close(self):
         await self.websocket.close()
+    
+    async def json_event_stream(self) -> AsyncIterator:
+        async for data in self.websocket:
+            json_data = json.loads(data)
+            yield json_data
+    
