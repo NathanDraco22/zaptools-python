@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="zaptools",
-    version="0.0.5",
+    version="0.0.6b1",
     url="https://github.com/NathanDraco22/zap-adapter-python",
     license='MIT',
 
@@ -18,9 +18,7 @@ setup(
     long_description=long_description,
 
     packages=[
-        "zaptools",
-        "zaptools.tools",
-        "zaptools.adapters"
+        "zaptools"
     ],
     install_requires=[],
     classifiers=[

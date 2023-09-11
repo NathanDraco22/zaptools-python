@@ -123,8 +123,8 @@ class EventProcessor:
     async def start_event_stream(self):
         await self.notify_connected()
         try:
-            async for data in self._adapter.json_event_stream():
-                await self.intercept_data(data)
+            while True:
+                await self._adapter.recv_json()
         except Exception:
             await self.notify_disconnected()
 
