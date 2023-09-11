@@ -1,8 +1,8 @@
 from setuptools import setup
 
-
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+from pathlib import Path
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 
 setup(
@@ -16,7 +16,7 @@ setup(
 
     description="Python Implementation to ZapTools WebSockets",
     long_description=long_description,
-
+    long_description_content_type='text/markdown',
     packages=[
         "zaptools"
     ],
