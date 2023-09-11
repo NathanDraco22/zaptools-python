@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="zaptools",
-    version="0.0.6b1",
+    version="0.0.6",
     url="https://github.com/NathanDraco22/zap-adapter-python",
     license='MIT',
 
@@ -22,7 +22,7 @@ setup(
     ],
     install_requires=[],
     classifiers=[
-        'Development Status :: 5 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
