@@ -133,3 +133,9 @@ async def connected_trigger(context: Context):
 async def disconnected_trigger(context:Context):
     print("Connection closed")
 ```
+
+### What's next
+- [X] support for events
+- [ ] share message between multiple WebSockets
+
+## Contributions are wellcome
