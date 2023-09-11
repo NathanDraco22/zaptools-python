@@ -124,7 +124,7 @@ class EventProcessor:
         await self.notify_connected()
         try:
             while True:
-                await self._adapter.recv_json()
+                await self.receive_events()
         except Exception:
             await self.notify_disconnected()
 
