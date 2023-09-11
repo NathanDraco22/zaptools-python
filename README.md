@@ -6,6 +6,13 @@
 
 Zaptools provides tools for building event-driven websocket integration. It includes pre-existing classes to seamless integration with FastApi and Sanic.
 
+
+#### installation
+``` bash
+pip install zaptools # windows
+pip3 install zaptools # mac
+```
+
 #### FastAPI
 ```python
 from fastapi import FastAPI, WebSocket
