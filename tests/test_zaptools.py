@@ -1,5 +1,4 @@
 import json
-import time
 from websockets.sync.client import connect, ClientConnection
 
 SERVER_DOMAIN = "ws://localhost:8000/"
@@ -57,6 +56,25 @@ def test_send_event1_event2():
     assert json_dict["eventName"] == "event2_completed", "event1 completed"
     assert json_dict["payload"] == "HELLO FROM SERVER 2", "payload received"
     client.close()
+
+def test_hello_bye():
+    client = _init_settings()
+    request_data = {
+        "eventName": "hb",
+        "payload": {"hello":"from client"}
+    }
+    json_string = json.dumps(request_data)
+    client.send(json_string)
+    data = client.recv()
+    json_dict = json.loads(data)
+    assert json_dict["eventName"] == "h", "event1 completed"
+    assert json_dict["payload"] == "h event", "payload received"
+    try:
+        client.recv()
+        assert False
+    except Exception:
+        assert True
+    
 
 def test_exit():
     client = _init_settings()

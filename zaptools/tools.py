@@ -17,11 +17,11 @@ class WebSocketConnection:
         self._connection_adapter = connection_adapter
         self.id = id
 
-    async def send(self, event_name: str, payload: dict[str, Any]):
-        await self._connection_adapter.send_event(event_name,payload)
+    def send(self, event_name: str, payload: dict[str, Any]):
+        self._connection_adapter.send_event(event_name,payload)
     
-    async def close(self):
-        await self._connection_adapter.close()
+    def close(self):
+        self._connection_adapter.close()
 
 
 class Context:
