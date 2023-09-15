@@ -31,7 +31,6 @@ class FastApiAdapter:
     
     def close(self):
         asyncio.create_task(self.websocket.close())
-        # await 
 
 class SanicAdapter:
 
@@ -48,16 +47,16 @@ class SanicAdapter:
         json_data = json.loads(data)
         return json_data
     
-    async def send_event(self, event_name:str, payload:Any):
+    def send_event(self, event_name:str, payload:Any):
         json_dict = {
             EVENT_KEY : event_name,
             PAYLOAD_KEY : payload
         }
         json_str = json.dumps(json_dict)
-        await self.websocket.send(json_str)
+        asyncio.create_task(self.websocket.send(json_str))
     
-    async def close(self):
-        await self.websocket.close()
+    def close(self):
+        asyncio.create_task(self.websocket.close())
     
     async def json_event_stream(self) -> AsyncIterator:
         async for data in self.websocket:
