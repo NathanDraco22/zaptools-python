@@ -25,7 +25,7 @@ register: EventRegister = EventRegister()
 @register.on_event("hello") 
 async def hello_trigger(context: Context):
     conn = context.connection
-    await conn.send("hello", "HELLO FROM SERVER !!!") 
+    conn.send("hello", "HELLO FROM SERVER !!!") 
 
 
 connector = Connector(register, FastApiAdapter)
@@ -51,7 +51,7 @@ This will creates an event named `"hello"` and it will call `hello_trigger` func
 @register.on_event("hello") 
 async def hello_trigger(context: Context):
     conn = context.connection
-    await conn.send("hello", "HELLO FROM SERVER !!!") 
+    conn.send("hello", "HELLO FROM SERVER !!!") 
 ```
 > Event it is a class with name("hello") and the callback(hello_trigger)
 
@@ -84,7 +84,7 @@ register: EventRegister = EventRegister()
 @register.on_event("hello") 
 async def hello_trigger(context: Context):
     conn = context.connection
-    await conn.send("hello", "HELLO FROM SERVER !!!") 
+    conn.send("hello", "HELLO FROM SERVER !!!") 
 
 
 connector = Connector(register, SanicAdapter)
@@ -107,7 +107,7 @@ In order to response to the client use the `WebSocketConnection.send(event:str, 
 @register.on_event("hello") 
 async def hello_trigger(context: Context):
     conn = context.connection
-    await conn.send("hello", "HELLO FROM SERVER !!!") # sending "hello" event to client with a payload.
+    conn.send("hello", "HELLO FROM SERVER !!!") # sending "hello" event to client with a payload.
 ```
 ### WebSocketConnection
 `WebSocketConnection` provides a easy interaction with the websocket.
