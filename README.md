@@ -16,8 +16,8 @@ pip3 install zaptools # mac
 #### FastAPI
 ```python
 from fastapi import FastAPI, WebSocket
-from zaptools.tools import EventRegister, Context, Connector
-from zaptools.adapters import FastApiAdapter
+from zaptools.tools import EventRegister, Context
+from zaptools.connectors import FastApiConnector
 
 app:FastAPI = FastAPI()
 register: EventRegister = EventRegister() 
@@ -28,11 +28,9 @@ async def hello_trigger(context: Context):
     conn.send("hello", "HELLO FROM SERVER !!!") 
 
 
-connector = Connector(register, FastApiAdapter)
-
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
-    event_processor = await connector.plug(websocket= ws)
+    event_processor = await FastApiConnector.plug(register, ws)
     await event_processor.start_event_stream()
 ```
 
@@ -55,11 +53,7 @@ async def hello_trigger(context: Context):
 ```
 > Event it is a class with name("hello") and the callback(hello_trigger)
 
-`Connector` has the responsability to connect the `EventRegister` and the `Websocket` class. It must to provide an adapter type, for `FastAPI` framework it is a pre-existing adapter.
-```python
-connector = Connector(register, FastApiAdapter)
-```
-For connecting all with the websocket class provided by FastAPI framework use the `plug` method of the `Connector` instance, it will return an instance of `EventProcessor` class.
+For connecting `EvenRegister` with the websocket class provided by FastAPI framework, there is a `FastApiConnector`, use the `plug` static method of the `FastApiConnector`, it will return an instance of `EventProcessor` class.
 ```python
 @app.websocket("/")
 async def websocket_endpoint(ws: WebSocket):
@@ -68,15 +62,13 @@ async def websocket_endpoint(ws: WebSocket):
 ```
 Finally, `EventProcessor` has the responsability to intercept and validate data from websocket connection. To start intercepting and invoking your events, just call the `start_event_stream` method.
 
-> Note: The operation that returns a Coroutine must be Awaited
-
 It's the same way for Sanic Framework
 #### Sanic
 ```python
 from sanic import Sanic, Request, Websocket
 
-from zaptools.tools import EventRegister, Context, Connector
-from zaptools.adapters import SanicAdapter
+from zaptools.tools import EventRegister, Context
+from zaptools.connectors import SanicConnector
 
 app = Sanic("MyHelloWorldApp")
 register: EventRegister = EventRegister()
@@ -86,12 +78,9 @@ async def hello_trigger(context: Context):
     conn = context.connection
     conn.send("hello", "HELLO FROM SERVER !!!") 
 
-
-connector = Connector(register, SanicAdapter)
-
 @app.websocket("/")
 async def websocker(request: Request, ws: Websocket):
-    event_processor = await connector.plug(ws)
+    event_processor = await SanicConnector.plug(register ,ws)
     await event_processor.start_event_stream()
 ```
 ### Context object
