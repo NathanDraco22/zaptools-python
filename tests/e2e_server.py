@@ -33,5 +33,4 @@ async def hello_and_bye(ctx:Context):
 
 @app.websocket("/")
 async def websocket_endpoint(ws: WebSocket):
-    event_processor = await FastApiConnector.plug(register, ws)
-    await event_processor.start_event_stream()
+    await FastApiConnector.plug_and_start(register,ws)
