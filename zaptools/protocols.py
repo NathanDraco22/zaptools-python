@@ -16,7 +16,7 @@ class ConnectionAdapter(Protocol):
     async def json_event_stream(self) -> AsyncIterator:
         ...
     
-    async def send_event(self, event_name:str, payload:Any):
+    async def send_event(self, event_name:str, payload:Any, headers: dict[str, Any]):
         ...
     
     async def close(self):

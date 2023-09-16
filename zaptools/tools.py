@@ -23,8 +23,12 @@ class WebSocketConnection:
         self._connection_adapter = connection_adapter
         self.id = id
 
-    def send(self, event_name: str, payload: dict[str, Any]):
-        self._connection_adapter.send_event(event_name,payload)
+    def send(self, 
+             event_name: str, 
+             payload: dict[str, Any], 
+             headers: dict[str, Any]
+    ):
+        self._connection_adapter.send_event(event_name, payload, headers)
     
     def close(self):
         self._connection_adapter.close()
