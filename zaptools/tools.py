@@ -74,8 +74,8 @@ class EventRegister:
 
 
 class EventCaller:
-    def __init__(self, event_register: EventRegister) -> None:
-        self._event_book = event_register._event_book
+    def __init__(self, event_book: EventBook) -> None:
+        self._event_book = event_book
         
     async def trigger_event(self, ctx: Context):
         event = self._event_book.get_event(ctx.event_name)
@@ -137,10 +137,11 @@ class Connector:
     def __init__(self, 
                  register: EventRegister, 
                  adapter_type: type[ConnectionAdapter],
-                 id_controller: IDController = IDController()
+                 id_controller: IDController,
+                 event_caller: EventCaller
     ) -> None:
         self.register = register
-        self.event_caller = EventCaller(register)
+        self.event_caller = event_caller
         self.adapter_type = adapter_type
         self.id_controller = id_controller
     
