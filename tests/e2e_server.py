@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket
-from zaptools.tools import EventRegister, Context, Connector
-from zaptools.adapters import FastApiAdapter
+from zaptools.tools import EventRegister, Context
+from zaptools.connectors import FastApiConnector
 
 app:FastAPI = FastAPI()
 register: EventRegister = EventRegister()
@@ -31,9 +31,7 @@ async def hello_and_bye(ctx:Context):
     conn.send("h", "h event")
     conn.close()
 
-connector = Connector(register, FastApiAdapter)
-
 @app.websocket("/")
 async def websocket_endpoint(ws: WebSocket):
-    event_processor = await connector.plug(websocket= ws)
+    event_processor = await FastApiConnector.plug(register, ws)
     await event_processor.start_event_stream()
