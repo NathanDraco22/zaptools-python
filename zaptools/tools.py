@@ -6,6 +6,12 @@ class Event:
     def __init__(self, name:str, callback: Callable) -> None:
         self.name = name
         self.callback = callback
+    
+class EventData:
+    def __init__(self, event_name:str, payload:Any, headers: dict[str, Any]) -> None:
+        self.event_name = event_name
+        self.payload = payload
+        self.headers = headers
 
 class WebSocketConnection:
 
@@ -17,27 +23,30 @@ class WebSocketConnection:
         self._connection_adapter = connection_adapter
         self.id = id
 
-    def send(self, event_name: str, payload: dict[str, Any]):
-        self._connection_adapter.send_event(event_name,payload)
+    def send(self, 
+             event_name: str, 
+             payload: dict[str, Any], 
+             headers: dict[str, Any]|None = None
+    ):
+        concatenated_headers = headers
+        if not concatenated_headers :
+            concatenated_headers = {}
+        self._connection_adapter.send_event(event_name, payload, concatenated_headers)
     
     def close(self):
         self._connection_adapter.close()
 
 
 class Context:
-
-    event_name:str
-    payload: dict[str, Any]
-    connection: WebSocketConnection
-
     def __init__(self, 
-                 event_name:str, 
-                 payload: dict[str, Any], 
+                 event_data: EventData,
                  connection: WebSocketConnection
     ) -> None:
-        self.event_name = event_name
-        self.payload = payload
+        self.event_data = event_data
         self.connection = connection
+        self.event_name = event_data.event_name
+        self.payload = event_data.payload
+        self.headers = event_data.headers
 
 class IDController:
     _ID_HEADING = "zpt"
@@ -103,21 +112,35 @@ class EventProcessor:
 
     async def notify_connected(self):
         EVENT_NAME = "connected"
-        ctx = Context(EVENT_NAME, {}, self._connection)
+        event_data = EventData(
+            event_name= EVENT_NAME,
+            payload={},
+            headers={}
+        )
+        ctx = Context(event_data, self._connection)
         await self._event_caller.trigger_event(ctx)
     
     async def notify_disconnected(self):
         EVENT_NAME = "disconnected"
-        ctx = Context(EVENT_NAME, {}, self._connection)
+        event_data = EventData(
+            event_name= EVENT_NAME,
+            payload={},
+            headers={}
+        )
+        ctx = Context(event_data, self._connection)
         await self._event_caller.trigger_event(ctx)
     
     async def receive_events(self):
         data = await self._adapter.recv_json()
-        ctx = Context(data["eventName"], data["payload"], self._connection)
-        await self._event_caller.trigger_event(ctx)
+        await self.intercept_data(data)
     
     async def intercept_data(self, data: dict[str,Any]):
-        ctx = Context(data["eventName"], data["payload"], self._connection)
+        event_data = EventData(
+            data["eventName"], 
+            data["payload"],
+            data["headers"]
+        )
+        ctx = Context(event_data, self._connection)
         await self._event_caller.trigger_event(ctx)
     
     async def start_event_stream(self):
