@@ -22,7 +22,8 @@ def test_send_event1():
     client = _init_settings()
     request_data = {
         "eventName": "event1",
-        "payload": {"hello":"from client"}
+        "payload": {"hello":"from client"},
+        "headers": {}
     }
     json_string = json.dumps(request_data)
     client.send(json_string)
@@ -36,7 +37,8 @@ def test_send_event1_event2():
     client = _init_settings()
     request_data = {
         "eventName": "event1",
-        "payload": {"hello":"from client"}
+        "payload": {"hello":"from client"},
+        "headers": {}
     }
     json_string = json.dumps(request_data)
     client.send(json_string)
@@ -47,7 +49,8 @@ def test_send_event1_event2():
 
     request_data = {
         "eventName": "event2",
-        "payload": {"hello":"from client"}
+        "payload": {"hello":"from client"},
+        "headers": {}
     }
     json_string = json.dumps(request_data)
     client.send(json_string)
@@ -61,7 +64,8 @@ def test_hello_bye():
     client = _init_settings()
     request_data = {
         "eventName": "hb",
-        "payload": {"hello":"from client"}
+        "payload": {"hello":"from client"},
+        "headers": {}
     }
     json_string = json.dumps(request_data)
     client.send(json_string)
@@ -80,7 +84,8 @@ def test_exit():
     client = _init_settings()
     request_data = {
         "eventName": "exit",
-        "payload": {"hello":"from client"}
+        "payload": {"hello":"from client"},
+        "headers": {}
     }
     json_string = json.dumps(request_data)
     client.send(json_string)
