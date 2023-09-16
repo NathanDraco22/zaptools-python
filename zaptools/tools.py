@@ -26,9 +26,12 @@ class WebSocketConnection:
     def send(self, 
              event_name: str, 
              payload: dict[str, Any], 
-             headers: dict[str, Any]
+             headers: dict[str, Any]|None = None
     ):
-        self._connection_adapter.send_event(event_name, payload, headers)
+        concatenated_headers = headers
+        if not concatenated_headers :
+            concatenated_headers = {}
+        self._connection_adapter.send_event(event_name, payload, concatenated_headers)
     
     def close(self):
         self._connection_adapter.close()

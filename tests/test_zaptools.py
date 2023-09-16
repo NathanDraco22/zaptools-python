@@ -15,6 +15,7 @@ def test_on_connected():
     json_dict = json.loads(data)
     assert json_dict["eventName"] == "connected", "event1 completed"
     assert json_dict["payload"] == "LIVE", "payload received"
+    assert json_dict["headers"]["myHeader"] == "I'm a header"
     client.close()
 
 

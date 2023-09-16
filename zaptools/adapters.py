@@ -49,10 +49,11 @@ class SanicAdapter:
         json_data = json.loads(data)
         return json_data
     
-    def send_event(self, event_name:str, payload:Any):
+    def send_event(self, event_name:str, payload:Any, headers:dict[str,Any]):
         json_dict = {
             EVENT_KEY : event_name,
-            PAYLOAD_KEY : payload
+            PAYLOAD_KEY : payload,
+            HEADERS_KEY : headers
         }
         json_str = json.dumps(json_dict)
         asyncio.create_task(self.websocket.send(json_str))
