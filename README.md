@@ -30,8 +30,8 @@ async def hello_trigger(context: Context):
 
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
-    event_processor = await FastApiConnector.plug(register, ws)
-    await event_processor.start_event_stream()
+    await FastApiConnector.plug_and_start(register,ws)
+
 ```
 
 Firstly create a `FastAPI` and `EventRegister` instance. `EventRegister` has the responsability to create events.
@@ -53,14 +53,12 @@ async def hello_trigger(context: Context):
 ```
 > Event it is a class with name("hello") and the callback(hello_trigger)
 
-For connecting `EvenRegister` with the websocket class provided by FastAPI framework, there is a `FastApiConnector`, use the `plug` static method of the `FastApiConnector`, it will return an instance of `EventProcessor` class.
+For connecting `EventRegister` with the websocket class provided by FastAPI framework, there is a `FastApiConnector`, use the `plug_and_start` static method of the `FastApiConnector`, it will start to receive events.
 ```python
 @app.websocket("/")
 async def websocket_endpoint(ws: WebSocket):
-    event_processor = await connector.plug(websocket= ws)
-    await event_processor.start_event_stream()
+    await FastApiConnector.plug_and_start(register, ws)
 ```
-Finally, `EventProcessor` has the responsability to intercept and validate data from websocket connection. To start intercepting and invoking your events, just call the `start_event_stream` method.
 
 It's the same way for Sanic Framework
 #### Sanic
@@ -79,9 +77,9 @@ async def hello_trigger(context: Context):
     conn.send("hello", "HELLO FROM SERVER !!!") 
 
 @app.websocket("/")
-async def websocker(request: Request, ws: Websocket):
-    event_processor = await SanicConnector.plug(register ,ws)
-    await event_processor.start_event_stream()
+async def websocket(request: Request, ws: Websocket):
+    await SanicConnector.plug_and_start(register, ws)
+
 ```
 ### Context object
 Each element is triggered with a `Context` object. This `Context` object contains information about the current event and which `WebSocketConnection` is invoking it.
