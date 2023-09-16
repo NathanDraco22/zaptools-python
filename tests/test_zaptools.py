@@ -19,6 +19,22 @@ def test_on_connected():
     client.close()
 
 
+def test_send_header():
+    client = _init_settings()
+    request_data = {
+        "eventName": "header",
+        "payload": {},
+        "headers": {"clientHeader":"client"}
+    }
+    json_string = json.dumps(request_data)
+    client.send(json_string)
+    data = client.recv()
+    json_dict = json.loads(data)
+    assert json_dict["headers"]["isOk"], "check if headers sent"
+    assert json_dict["eventName"] == "headerTest"
+    assert json_dict["payload"] == "headerTest"
+    client.close()
+
 def test_send_event1():
     client = _init_settings()
     request_data = {
