@@ -7,11 +7,16 @@ register: EventRegister = EventRegister()
 
 @register.on_event("connected")
 async def connected_trigger(ctx: Context):
-    ctx.connection.send("connected", "LIVE")
+    ctx.connection.send("connected", "LIVE", {"myHeader": "I'm a header"})
 
 @register.on_event("disconnected")
 async def disconnected_trigger(ctx:Context):
     print(f"connection left -> {ctx.connection.id}")
+
+@register.on_event("header")
+async def headers( ctx:Context):
+    test_header = ctx.headers["clientHeader"]
+    ctx.connection.send("headerTest", "headerTest", {"isOk" : test_header=="client"})
 
 @register.on_event("event1")
 async def event1_triger(ctx: Context):
