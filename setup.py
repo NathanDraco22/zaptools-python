@@ -7,14 +7,14 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="zaptools",
-    version="0.0.6",
+    version="0.1.1",
     url="https://github.com/NathanDraco22/zap-adapter-python",
     license='MIT',
 
     author="Nathan Mejia",
     author_email="nathandraco22@gmail.com",
 
-    description="Python Implementation to ZapTools WebSockets",
+    description="A toolkit for Event-Driven websocket management",
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=[
