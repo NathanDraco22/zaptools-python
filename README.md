@@ -1,6 +1,19 @@
-# ZAPTOOLS
+<h1 align="center">Zaptools</h1>
 
-#### A toolkit for Event-Driven websocket management
+<p align="center">
+  <img src="https://raw.githubusercontent.com/NathanDraco22/zaptools-dart/main/assets/zaptools-logo-150.png" />
+  <h3 align="center">
+    A toolkit for Event-Driven websocket management
+  <h3>
+</p>
+<div align="center">
+    <a href="https://pypi.org/project/zaptools/"><img src="https://badge.fury.io/py/zaptools.svg" alt="PyPI version" height="18"></a>
+</div>
+
+### Also Supported
+| Lang               |Side  |View Source                                                                                           |
+|:------------------:|:----:|:------------------------------------------------------------------------------------------------------|
+|<a href="https://www.python.org" target="_blank"> <img src="https://www.vectorlogo.zone/logos/dartlang/dartlang-icon.svg" alt="python" width="25" height="25"/> </a>| Client/Server |[`zaptools_dart`](https://github.com/NathanDraco22/zaptools-dart)|
 
 ### Getting Started
 
