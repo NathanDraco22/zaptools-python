@@ -1,3 +1,4 @@
+from asyncio import Task
 from .tools import WebSocketConnection
 from typing import Any
 
@@ -19,13 +20,13 @@ class Room:
             self,
             event_name:str, 
             payload: Any, 
-            headers: dict|None,
-            exclude: WebSocketConnection|None
-        ):
+            headers: dict|None = None,
+            exclude: WebSocketConnection|None = None
+        ) -> Task[None]:
         for _, conn in self._connections.items():
             if (exclude is not None and exclude.id == conn.id):
                 continue
-            conn.send(event_name, payload,headers)
+            return conn.send(event_name, payload,headers)
 
 
 class RoomManager:
@@ -43,11 +44,11 @@ class RoomManager:
                      event_name: str,
                      payload: Any,
                      headers: dict|None
-    ):
+    ) -> Task[None]:
         room = self._room_book.get(room_name)
         if room is None:
             return
-        room.send(event_name, payload, headers)
+        return room.send(event_name, payload, headers)
     
     def add_to_room(self, room_name: str, connection: WebSocketConnection):
         room = self._room_book.get(room_name)

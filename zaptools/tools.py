@@ -1,4 +1,6 @@
 import uuid
+import asyncio
+from asyncio import Task
 from typing import Callable, Any
 from .protocols import ConnectionAdapter
 
@@ -27,17 +29,19 @@ class WebSocketConnection:
              event_name: str, 
              payload: dict[str, Any], 
              headers: dict[str, Any]|None = None
-    ):
+    ) -> Task[None]:
         concatenated_headers = headers
         if not concatenated_headers :
             concatenated_headers = {}
-        self._connection_adapter.send_event(event_name, payload, concatenated_headers)
+        return asyncio.create_task(self._connection_adapter.send_event(
+            event_name, payload, concatenated_headers
+        ))
     
-    def close(self):
-        self._connection_adapter.close()
+    async def close(self):
+        await self._connection_adapter.close()
 
 
-class Context:
+class EventContext:
     def __init__(self, 
                  event_data: EventData,
                  connection: WebSocketConnection
@@ -86,7 +90,7 @@ class EventCaller:
     def __init__(self, event_book: EventBook) -> None:
         self._event_book = event_book
         
-    async def trigger_event(self, ctx: Context):
+    async def trigger_event(self, ctx: EventContext):
         event = self._event_book.get_event(ctx.event_name)
         if not event:
             return
@@ -117,7 +121,7 @@ class EventProcessor:
             payload={},
             headers={}
         )
-        ctx = Context(event_data, self._connection)
+        ctx = EventContext(event_data, self._connection)
         await self._event_caller.trigger_event(ctx)
     
     async def notify_disconnected(self):
@@ -127,7 +131,7 @@ class EventProcessor:
             payload={},
             headers={}
         )
-        ctx = Context(event_data, self._connection)
+        ctx = EventContext(event_data, self._connection)
         await self._event_caller.trigger_event(ctx)
     
     async def receive_events(self):
@@ -140,7 +144,7 @@ class EventProcessor:
             data["payload"],
             data["headers"]
         )
-        ctx = Context(event_data, self._connection)
+        ctx = EventContext(event_data, self._connection)
         await self._event_caller.trigger_event(ctx)
     
     async def start_event_stream(self):
