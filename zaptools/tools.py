@@ -1,6 +1,4 @@
 import uuid
-import asyncio
-from asyncio import Task
 from typing import Callable, Any
 from .protocols import ConnectionAdapter
 
@@ -25,17 +23,17 @@ class WebSocketConnection:
         self._connection_adapter = connection_adapter
         self.id = id
 
-    def send(self, 
+    async def send(self, 
              event_name: str, 
              payload: dict[str, Any], 
              headers: dict[str, Any]|None = None
-    ) -> Task[None]:
+    ):
         concatenated_headers = headers
         if not concatenated_headers :
             concatenated_headers = {}
-        return asyncio.create_task(self._connection_adapter.send_event(
+        await self._connection_adapter.send_event(
             event_name, payload, concatenated_headers
-        ))
+        )
     
     async def close(self):
         await self._connection_adapter.close()

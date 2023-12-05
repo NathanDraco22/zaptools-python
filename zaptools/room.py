@@ -1,3 +1,4 @@
+import asyncio
 from asyncio import Task
 from .tools import WebSocketConnection
 from typing import Any
@@ -16,17 +17,19 @@ class Room:
     def remove(self, connection: WebSocketConnection):
         del self._connections[connection.id]
     
-    def send(
+    async def send(
             self,
             event_name:str, 
             payload: Any, 
             headers: dict|None = None,
             exclude: WebSocketConnection|None = None
-        ) -> Task[None]:
+        ):
+        coros = []
         for _, conn in self._connections.items():
             if (exclude is not None and exclude.id == conn.id):
                 continue
-            return conn.send(event_name, payload,headers)
+            coros.append(conn.send(event_name, payload,headers))
+        asyncio.gather(*coros)
 
 
 class RoomManager:
