@@ -1,17 +1,27 @@
 import asyncio
 from .tools import WebSocketConnection
 from typing import Any
+from .meta_tag import MetaTag
 
 class Room:
 
     name: str
     _connections: dict[str, WebSocketConnection] = {}
+    _meta: dict[str, Any] = {}
     
     def __init__(self, name:str):
         self.name = name
 
-    def add(self,connection: WebSocketConnection):
+    def add(self,connection: WebSocketConnection, 
+            meta_tag:MetaTag|None = None,
+    ):
         self._connections[connection.id] = connection
+        if meta_tag is None: 
+            return
+        self._meta[connection.id] = meta_tag
+    
+    def get_meta(self, connection: WebSocketConnection)-> Any:
+        return self._meta.get(connection.id)
 
     def remove(self, connection: WebSocketConnection):
         del self._connections[connection.id]
