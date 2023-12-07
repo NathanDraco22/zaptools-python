@@ -33,10 +33,12 @@ class Room:
             headers: dict|None = None,
             exclude: WebSocketConnection|None = None
         ):
+        wconnections = self._connections.values()
+        exclude_id = "===" if exclude is None else exclude.id
         coros = [
-            conn.send()
-            for _,conn in self._connections.items() 
-            if exclude is not None and exclude.id == conn.id
+            coro.send(event_name,payload,headers) 
+            for coro in wconnections
+            if coro.id != exclude_id
         ]
         await asyncio.gather(*coros)
 
