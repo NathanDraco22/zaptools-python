@@ -20,7 +20,7 @@ class Room:
             return
         self._meta[connection.id] = meta_tag
     
-    def get_meta(self, connection: WebSocketConnection)-> Any:
+    def get_meta(self, connection: WebSocketConnection)-> MetaTag:
         return self._meta.get(connection.id)
 
     def remove(self, connection: WebSocketConnection):
@@ -33,11 +33,11 @@ class Room:
             headers: dict|None = None,
             exclude: WebSocketConnection|None = None
         ):
-        coros = []
-        for _, conn in self._connections.items():
-            if (exclude is not None and exclude.id == conn.id):
-                continue
-            coros.append(conn.send(event_name, payload,headers))
+        coros = [
+            conn.send()
+            for _,conn in self._connections.items() 
+            if exclude is not None and exclude.id == conn.id
+        ]
         await asyncio.gather(*coros)
 
 
