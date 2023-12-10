@@ -1,17 +1,27 @@
 import asyncio
 from .tools import WebSocketConnection
 from typing import Any
+from .meta_tag import MetaTag
 
 class Room:
 
     name: str
     _connections: dict[str, WebSocketConnection] = {}
+    _meta: dict[str, Any] = {}
     
     def __init__(self, name:str):
         self.name = name
 
-    def add(self,connection: WebSocketConnection):
+    def add(self,connection: WebSocketConnection, 
+            meta_tag:MetaTag|None = None,
+    ):
         self._connections[connection.id] = connection
+        if meta_tag is None: 
+            return
+        self._meta[connection.id] = meta_tag
+    
+    def get_meta(self, connection: WebSocketConnection)-> MetaTag:
+        return self._meta.get(connection.id)
 
     def remove(self, connection: WebSocketConnection):
         del self._connections[connection.id]
@@ -23,11 +33,13 @@ class Room:
             headers: dict|None = None,
             exclude: WebSocketConnection|None = None
         ):
-        coros = []
-        for _, conn in self._connections.items():
-            if (exclude is not None and exclude.id == conn.id):
-                continue
-            coros.append(conn.send(event_name, payload,headers))
+        wconnections = self._connections.values()
+        exclude_id = "===" if exclude is None else exclude.id
+        coros = [
+            coro.send(event_name,payload,headers) 
+            for coro in wconnections
+            if coro.id != exclude_id
+        ]
         await asyncio.gather(*coros)
 
 

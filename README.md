@@ -38,12 +38,13 @@ register: EventRegister = EventRegister()
 @register.on_event("hello") 
 async def hello_trigger(context: Context):
     conn = context.connection
-    conn.send("hello", "HELLO FROM SERVER !!!") 
+    await conn.send("hello", "HELLO FROM SERVER !!!") 
 
 
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
-    await FastApiConnector.plug_and_start(register,ws)
+    connector = FastApiConnector(reg, ws)
+    await connector.start()
 
 ```
 
@@ -62,7 +63,7 @@ This will creates an event named `"hello"` and it will call `hello_trigger` func
 @register.on_event("hello") 
 async def hello_trigger(context: Context):
     conn = context.connection
-    conn.send("hello", "HELLO FROM SERVER !!!") 
+    await conn.send("hello", "HELLO FROM SERVER !!!") 
 ```
 > Event it is a class with name("hello") and the callback(hello_trigger)
 
@@ -87,11 +88,12 @@ register: EventRegister = EventRegister()
 @register.on_event("hello") 
 async def hello_trigger(context: Context):
     conn = context.connection
-    conn.send("hello", "HELLO FROM SERVER !!!") 
+    await conn.send("hello", "HELLO FROM SERVER !!!") 
 
 @app.websocket("/")
 async def websocket(request: Request, ws: Websocket):
-    await SanicConnector.plug_and_start(register, ws)
+    connector = SanicConnector(reg, ws)
+    await connector.start()
 
 ```
 ### Context object
@@ -115,10 +117,11 @@ async def hello_trigger(context: Context):
 ```python
 WebSocketConnection.id # ID of connection
 
-WebSocketConnection.send(event:str, payload:Any) #Send Event to the client
+await WebSocketConnection.send(event:str, payload:Any) #Send Event to the client
 
-WebSocketConnection.close() # Close the websocket connection
+await WebSocketConnection.close() # Close the websocket connection
 ```
+> Coroutines need to be awaited.
 
 ### Events
 
