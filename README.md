@@ -121,7 +121,7 @@ await WebSocketConnection.send(event:str, payload:Any) #Send Event to the client
 
 await WebSocketConnection.close() # Close the websocket connection
 ```
-> Coroutines must be awaits 
+> Coroutines need to be awaited.
 
 ### Events
 
