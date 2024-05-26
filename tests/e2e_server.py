@@ -13,6 +13,14 @@ async def connected_trigger(ctx: EventContext):
 async def disconnected_trigger(ctx:EventContext):
     print(f"connection left -> {ctx.connection.id}")
 
+@reg.on_event("error")
+async def error_trigger(ctx:EventContext):
+    print(ctx.payload)
+    await ctx.connection.send(
+        event_name="remote_error",
+        payload={}
+    )
+
 @reg.on_event("header")
 async def headers( ctx:EventContext):
     test_header = ctx.headers["clientHeader"]
@@ -38,6 +46,16 @@ async def hello_and_bye(ctx:EventContext):
     await conn.send("h", "h event")
     await conn.close()
 
+@reg.on_event("error-case")
+async def test_error(ctx:EventContext):
+    print("===============================")
+    algo = {}
+    algo["fake_key"]
+    print("salir")
+
+
+
 @app.websocket("/")
 async def websocket_endpoint(ws: WebSocket):
-    await FastApiConnector.plug_and_start(reg,ws)
+    conn = FastApiConnector(register= reg, webscoket= ws)
+    await conn.start()

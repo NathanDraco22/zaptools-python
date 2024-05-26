@@ -1,4 +1,5 @@
 import uuid
+import traceback
 from typing import Callable, Any
 from .protocols import ConnectionAdapter
 
@@ -132,10 +133,22 @@ class EventProcessor:
         ctx = EventContext(event_data, self._connection)
         await self._event_caller.trigger_event(ctx)
     
+    async def notify_error(self, event_name:str ,error:str):
+        EVENT_NAME = "error"
+        event_data = EventData(
+            event_name= EVENT_NAME,
+            payload= f'An error occurred in the event "{event_name}" \n {error}',
+            headers={}
+        )
+        ctx = EventContext(event_data, self._connection)
+        await self._event_caller.trigger_event(ctx)
+    
+
     async def receive_events(self):
         data = await self._adapter.recv_json()
         await self.intercept_data(data)
     
+
     async def intercept_data(self, data: dict[str,Any]):
         event_data = EventData(
             data["eventName"], 
@@ -143,8 +156,14 @@ class EventProcessor:
             data["headers"]
         )
         ctx = EventContext(event_data, self._connection)
-        await self._event_caller.trigger_event(ctx)
-    
+        try:
+            await self._event_caller.trigger_event(ctx)
+        except BaseException:
+            await self.notify_error(
+                event_name=event_data.event_name,
+                error= str(traceback.format_exc())
+            )
+
     async def start_event_stream(self):
         await self.notify_connected()
         try:
