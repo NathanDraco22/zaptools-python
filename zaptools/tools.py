@@ -3,6 +3,17 @@ import traceback
 from typing import Callable, Any
 from .protocols import ConnectionAdapter
 
+class RequestInfo:
+    host: str
+    port: int
+    base_url: str
+
+    def __init__(self, host: str, port: int, base_url: str) -> None:
+        self.host = host
+        self.port = port
+        self.base_url = base_url
+
+
 class Event:
     def __init__(self, name:str, callback: Callable) -> None:
         self.name = name
