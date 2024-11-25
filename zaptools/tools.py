@@ -24,6 +24,13 @@ class EventData:
         self.event_name = event_name
         self.payload = payload
         self.headers = headers
+    
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "eventName": self.event_name,
+            "payload": self.payload,
+            "headers": self.headers
+        }
 
 class WebSocketConnection:
 

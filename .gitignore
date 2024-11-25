@@ -40,4 +40,5 @@ nosetests.xml
 zap
 server.py
 sanic_server.py
-starlette_server.py
+starlette_server.py.
+client_demo.py
