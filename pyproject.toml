@@ -7,7 +7,7 @@ name = "zaptools"
 description = "A toolkit for Event-Driven websocket management"
 readme = "README.md"
 authors = [{name = "Nathan Mejia", email = "nathandraco22@gmail.com"}]
-version = "0.2.5"
+version = "0.3.0"
 requires-python = ">=3.10"
 classifiers = [
     'Development Status :: 4 - Beta',
@@ -17,6 +17,10 @@ classifiers = [
     'Programming Language :: Python :: 3.10',
 ]
 license = { file = "LICENSE" }
+dependencies = [
+    "rich>=13.9.4",
+    "websockets>=14.1",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/NathanDraco22/zaptools-python"
@@ -24,4 +28,9 @@ license = { file = "LICENSE" }
 [project.optional-dependencies]
 dev = [
     "pytest"
+]
+
+[dependency-groups]
+dev = [
+    "build>=1.2.2.post1",
 ]
