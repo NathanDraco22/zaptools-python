@@ -144,4 +144,31 @@ async def disconnected_trigger(ctx: EventContext):
 ```
 > Error details in `payload`
 
+## Client
+
+Zaptools provides a python client to connect with others zaptools server
+
+```python
+from zaptools.client import ZapClient
+
+client = ZapClient()
+await client.connect("ws://localhost:8000/") #Connect to the server
+
+await client.send("event1", {"hello":"from client"}, {}) # send a event
+
+# A generator with all event stream
+# Receive all events
+async for event in client.event_stream(): 
+        print(event.payload)
+
+
+# A generator with all connection state
+# Receive connection state
+# ONLINE, OFFLINE, CONNNECTING and ERROR state
+async for state in client.connection_state(): 
+        print(state)
+
+```
+
+
 ## Contributions are wellcome
