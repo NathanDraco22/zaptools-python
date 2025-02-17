@@ -181,7 +181,8 @@ class EventProcessor:
         try:
             while True:
                 await self.receive_events()
-        except Exception:
+        except Exception as e:
+            zap_logger.error(f"An error ocurred in the event stream \n {str(e)}")
             await self._connection.close()
             await self.notify_disconnected()
 
