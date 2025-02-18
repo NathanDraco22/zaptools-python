@@ -16,17 +16,6 @@ class RequestInfo:
         self.base_url = base_url
 
 
-class RequestInfo:
-    host: str
-    port: int
-    base_url: str
-
-    def __init__(self, host: str, port: int, base_url: str) -> None:
-        self.host = host
-        self.port = port
-        self.base_url = base_url
-
-
 class Event:
     def __init__(self, name: str, callback: Callable) -> None:
         self.name = name
@@ -38,13 +27,6 @@ class EventData:
         self.event_name = event_name
         self.payload = payload
         self.headers = headers
-    
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "eventName": self.event_name,
-            "payload": self.payload,
-            "headers": self.headers
-        }
 
     def to_dict(self) -> dict[str, Any]:
         return {
