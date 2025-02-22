@@ -148,7 +148,6 @@ class EventProcessor:
 
     async def notify_error(self, event_name: str, error: str):
         zap_logger.error(f"An error ocurred in the event '{event_name}'")
-        zap_logger.error(error)
         EVENT_NAME = "error"
         event_data = EventData(
             event_name=EVENT_NAME,
@@ -162,9 +161,13 @@ class EventProcessor:
             zap_logger.error("An error ocurred in the a event 'error' callback")
             zap_logger.error(str(e))
 
-    async def receive_events(self):
-        data = await self._adapter.recv_json()
+    async def receive_events(self) -> bool:
+        try:
+            data = await self._adapter.recv_json()
+        except Exception:
+            return False
         await self.intercept_data(data)
+        return True
 
     async def intercept_data(self, data: dict[str, Any]):
         event_data = EventData(data["eventName"], data["payload"], data["headers"])
@@ -180,11 +183,13 @@ class EventProcessor:
         await self.notify_connected()
         try:
             while True:
-                await self.receive_events()
+                isReceived = await self.receive_events()
+                if not isReceived:
+                    break
         except Exception as e:
             zap_logger.error(f"An error ocurred in the event stream \n {str(e)}")
             await self._connection.close()
-            await self.notify_disconnected()
+        await self.notify_disconnected()
 
 
 class Connector:
