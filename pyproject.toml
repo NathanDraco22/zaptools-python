@@ -28,7 +28,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "fastapi[standard]>=0.115.12",
-    "pytest",
+    "pytest>=8.3.5",
 ]
 
 [dependency-groups]
