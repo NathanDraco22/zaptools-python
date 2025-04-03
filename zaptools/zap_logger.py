@@ -14,16 +14,16 @@ class ZapLogger:
         )
         self.logger.setLevel(logging.INFO)
 
-    def info(self, message):
+    def info(self, message: str):
         self.logger.info(f"[Zap]{message}")
 
-    def info_green(self, message):
+    def info_green(self, message: str):
         self.logger.info(f"[green][Zap]{message}", extra={"markup": True})
 
-    def warning(self, message):
+    def warning(self, message: str):
         self.logger.warning(f"[yellow][Zap]{message}", extra={"markup": True})
 
-    def error(self, message):
+    def error(self, message: str):
         self.logger.error(f"[red][Zap]{message}", extra={"markup": True})
 
 

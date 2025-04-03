@@ -1,15 +1,18 @@
 from typing import Any, AsyncIterator
 import json
 
-EVENT_KEY= "eventName"
+from .protocols import ConnectionAdapter
+
+EVENT_KEY = "eventName"
 PAYLOAD_KEY = "payload"
 HEADERS_KEY = "headers"
 
-class FastApiAdapter:
 
-    websocket:Any
+class FastApiAdapter(ConnectionAdapter):
 
-    def __init__(self, websocket) -> None:
+    websocket: Any
+
+    def __init__(self, websocket: Any) -> None:
         self.websocket = websocket
 
     async def start_connection(self):
@@ -18,50 +21,51 @@ class FastApiAdapter:
     async def recv_json(self) -> dict[str, Any]:
         return await self.websocket.receive_json()
 
-    async def send_event(self, event_name:str, payload:Any, headers: dict[str, Any]):
-        json_dict = {
-            EVENT_KEY : event_name,
-            PAYLOAD_KEY : payload,
-            HEADERS_KEY : headers
+    async def send_event(self, event_name: str, payload: Any, headers: dict[str, Any]):
+        json_dict: dict[str, Any] = {
+            EVENT_KEY: event_name,
+            PAYLOAD_KEY: payload,
+            HEADERS_KEY: headers,
         }
+
         await self.websocket.send_json(json_dict)
-    
+
     async def json_event_stream(self) -> AsyncIterator[Any]:
         async for data in self.websocket.iter_json():
             yield data
-    
+
     async def close(self):
         await self.websocket.close()
 
-class SanicAdapter:
 
-    websocket:Any
+class SanicAdapter(ConnectionAdapter):
 
-    def __init__(self, websocket) -> None:
+    websocket: Any
+
+    def __init__(self, websocket: Any) -> None:
         self.websocket = websocket
 
-    async def start_connection(self):
-        ...
+    async def start_connection(self): ...
 
     async def recv_json(self) -> dict[str, Any]:
         data = await self.websocket.recv()
         json_data = json.loads(data)
         return json_data
-    
-    async def send_event(self, event_name:str, payload:Any, headers:dict[str,Any]):
-        json_dict = {
-            EVENT_KEY : event_name,
-            PAYLOAD_KEY : payload,
-            HEADERS_KEY : headers
+
+    async def send_event(self, event_name: str, payload: Any, headers: dict[str, Any]):
+        json_dict: dict[str, Any] = {
+            EVENT_KEY: event_name,
+            PAYLOAD_KEY: payload,
+            HEADERS_KEY: headers,
         }
+
         json_str = json.dumps(json_dict)
         await self.websocket.send(json_str)
-    
+
     async def close(self):
         await self.websocket.close()
-    
-    async def json_event_stream(self) -> AsyncIterator:
+
+    async def json_event_stream(self) -> AsyncIterator[Any]:
         async for data in self.websocket:
             json_data = json.loads(data)
             yield json_data
-    
