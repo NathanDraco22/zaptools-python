@@ -40,6 +40,7 @@ class ZapClient:
 
     async def event_stream(self) -> AsyncGenerator[EventData, None]:
         conn = self._conn
+
         while True:
             try:
                 data = await conn.recv()
@@ -47,7 +48,9 @@ class ZapClient:
                 await self._update_connection_state(ZapClientState.ERROR)
                 zap_logger.error("Error receiving data from server")
                 break
+
             data = json.loads(data)
+
             try:
                 event_data = EventData(
                     data["eventName"], data["payload"], data["headers"]
@@ -57,6 +60,7 @@ class ZapClient:
                 await self._update_connection_state(ZapClientState.ERROR)
                 zap_logger.error("Error parsing event from server")
                 break
+
         await self._update_connection_state(ZapClientState.OFFLINE)
         zap_logger.warning("Disconnected from server")
 
