@@ -7,14 +7,16 @@ from websockets.asyncio.client import connect
 from .tools import EventData
 from .zap_logger import zap_logger
 
+
 class ZapClientState(enum.Enum):
     ONLINE = 1
     OFFLINE = 2
     CONNECTING = 3
     ERROR = 4
 
+
 class ZapClient:
-    
+
     _connection_state_queue = asyncio.Queue[ZapClientState]()
     _current_state = ZapClientState.OFFLINE
 
@@ -23,13 +25,12 @@ class ZapClient:
         self._conn = await connect(url)
         await self._update_connection_state(ZapClientState.ONLINE)
         zap_logger.info_green(f"Connected to {url}")
-        
 
     async def send(
-            self, 
-            event_name: str, 
-            payload: dict[str, Any], 
-            headers: dict[str, Any]|None
+        self,
+        event_name: str,
+        payload: dict[str, Any],
+        headers: dict[str, Any] | None,
     ) -> None:
         conn = self._conn
         inner_header = headers if headers is not None else {}
@@ -37,9 +38,9 @@ class ZapClient:
         event_json = json.dumps(event_data.to_dict())
         await conn.send(event_json)
 
-    
     async def event_stream(self) -> AsyncGenerator[EventData, None]:
         conn = self._conn
+
         while True:
             try:
                 data = await conn.recv()
@@ -47,18 +48,21 @@ class ZapClient:
                 await self._update_connection_state(ZapClientState.ERROR)
                 zap_logger.error("Error receiving data from server")
                 break
+
             data = json.loads(data)
+
             try:
                 event_data = EventData(
-                    data["eventName"], 
+                    data["eventName"],
                     data["payload"],
-                    data["headers"]
+                    data["headers"],
                 )
                 yield event_data
             except Exception:
                 await self._update_connection_state(ZapClientState.ERROR)
                 zap_logger.error("Error parsing event from server")
                 break
+
         await self._update_connection_state(ZapClientState.OFFLINE)
         zap_logger.warning("Disconnected from server")
 
@@ -72,7 +76,3 @@ class ZapClient:
     async def _update_connection_state(self, state: ZapClientState):
         self._current_state = state
         await self._connection_state_queue.put(state)
-
-
-
-
