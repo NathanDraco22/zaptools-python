@@ -66,7 +66,7 @@ class WebSocketConnection:
     async def send(
         self,
         event_name: str,
-        payload: dict[str, Any],
+        payload: dict[str, Any] = {},
         headers: dict[str, Any] | None = None,
     ) -> None:
         concatenated_headers = headers
@@ -201,8 +201,15 @@ class EventProcessor:
         await self.intercept_data(data)
         return True
 
-    async def intercept_data(self, data: dict[str, Any]) -> None:
-        event_data = EventData(data["eventName"], data["payload"], data["headers"])
+    async def intercept_data(self, data: dict[str, Any]):
+        event_name = data.get("eventName")
+        payload = data.get("payload")
+        headers = data.get("headers")
+        if type(event_name) is not str:
+            raise Exception("Event name must be a string")
+        if type(headers) is not dict:
+            headers = {}
+        event_data = EventData(event_name, payload, headers)
         ctx = EventContext(event_data, self._connection)
 
         try:

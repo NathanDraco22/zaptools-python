@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.10"
 
 [[package]]
@@ -842,7 +843,7 @@ wheels = [
 
 [[package]]
 name = "zaptools"
-version = "0.4.3"
+version = "0.4.7"
 source = { editable = "." }
 dependencies = [
     { name = "rich" },
@@ -867,6 +868,7 @@ requires-dist = [
     { name = "rich", specifier = ">=13.9.4" },
     { name = "websockets", specifier = ">=14.1" },
 ]
+provides-extras = ["dev"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "build", specifier = ">=1.2.2.post1" }]

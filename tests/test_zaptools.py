@@ -33,7 +33,7 @@ def test_error_case():
 
     json_string = json.dumps(request_data)
     client.send(json_string)
-    data = client.recv()
+    data = client.recv(2.0)
     json_dict = json.loads(data)
 
     assert json_dict["eventName"] == "remote_error"
@@ -52,7 +52,7 @@ def test_send_header():
 
     json_string = json.dumps(request_data)
     client.send(json_string)
-    data = client.recv()
+    data = client.recv(2.0)
     json_dict = json.loads(data)
 
     assert json_dict["eventName"] == "headerTest"

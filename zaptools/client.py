@@ -30,7 +30,7 @@ class ZapClient:
         self,
         event_name: str,
         payload: dict[str, Any],
-        headers: dict[str, Any] | None,
+        headers: dict[str, Any] | None = None,
     ) -> None:
         conn = self._conn
         inner_header = headers if headers is not None else {}
@@ -53,9 +53,7 @@ class ZapClient:
 
             try:
                 event_data = EventData(
-                    data["eventName"],
-                    data["payload"],
-                    data["headers"],
+                    data["eventName"], data["payload"], data["headers"]
                 )
                 yield event_data
             except Exception:
