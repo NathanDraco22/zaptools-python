@@ -16,6 +16,15 @@ class FastApiConnector:
         websocket: Any,
         connection_id: str | None = None,
     ):
+        """
+        Initializes a FastApiConnector instance.
+
+        Args:
+            register (EventRegister): The event register for managing events.
+            websocket (Any): The websocket connection instance.
+            connection_id (str | None, optional): The unique identifier for the connection. Will be generated if not provided.
+        """
+
         self.register = register
         self.websocket = websocket
         self._connection_id = connection_id
@@ -68,6 +77,14 @@ class SanicConnector:
         websocket: Any,
         connection_id: str | None = None,
     ):
+        """
+        Initializes a SanicConnector instance.
+
+        Args:
+            register (EventRegister): The event register for managing events.
+            websocket (Any): The websocket connection instance.
+            connection_id (str | None, optional): The unique identifier for the connection. Will be generated if not provided.
+        """
         self.register = register
         self.websocket = websocket
         self.connection_id = connection_id
