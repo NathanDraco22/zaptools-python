@@ -1,5 +1,6 @@
 from typing import Any
 from zaptools.tools import WebSocketConnection
+from zaptools.zap_logger import zap_logger
 
 
 class ConnectionRouter:
@@ -70,6 +71,7 @@ class ConnectionRouter:
     ) -> bool:
         """
         Sends an event to a WebSocket connection by its ID.
+        returns True if the event was successfully sent, False otherwise
 
         Args:
             connection_id (str): The ID of the connection to send the event to.
@@ -82,6 +84,10 @@ class ConnectionRouter:
         """
         connection = self.get_connection(connection_id)
         if connection is not None:
-            await connection.send(event_name, payload, headers)
-            return True
+            try:
+                await connection.send(event_name, payload, headers)
+                return True
+            except Exception:
+                zap_logger.error(f"Error sending event to connection: {connection_id}")
+                return False
         return False
