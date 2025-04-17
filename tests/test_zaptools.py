@@ -157,3 +157,20 @@ def test_exit():
         assert False
     except Exception:
         assert True
+
+
+def test_empty_event():
+    client = _init_settings()
+
+    request_data: dict[str, Any] = {
+        "eventName": "empty-event",
+    }
+
+    json_string = json.dumps(request_data)
+    client.send(json_string)
+    data = client.recv()
+    json_dict = json.loads(data)
+
+    assert json_dict["eventName"] == "empty-event"
+    assert json_dict["payload"] is None
+    assert json_dict.get("headers") is None

@@ -28,7 +28,10 @@ async def error_trigger(ctx: EventContext):
 
 @reg.on_event("header")
 async def headers(ctx: EventContext):
-    test_header = ctx.headers["clientHeader"]
+    test_header = ""
+    if ctx.headers:
+        test_header = ctx.headers["clientHeader"]
+
     await ctx.connection.send(
         "headerTest",
         {"isOk": test_header == "client"},
@@ -63,7 +66,12 @@ async def test_error(ctx: EventContext):
     print("===============================")
     algo = {}
     algo["fake_key"]
-    print("salir")
+    print("exit error-case")
+
+
+@reg.on_event("empty-event")
+async def empty_header(ctx: EventContext):
+    await ctx.connection.send("empty-event", None)
 
 
 @app.websocket("/")

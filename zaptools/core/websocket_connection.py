@@ -14,18 +14,13 @@ class WebSocketConnection:
     async def send(
         self,
         event_name: str,
-        payload: dict[str, Any] = {},
+        payload: Any,
         headers: dict[str, Any] | None = None,
     ) -> None:
-        concatenated_headers = headers
-
-        if not concatenated_headers:
-            concatenated_headers = {}
-
         await self._connection_adapter.send_event(
             event_name,
             payload,
-            concatenated_headers,
+            headers,
         )
 
     async def close(self) -> None:

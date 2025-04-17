@@ -49,11 +49,13 @@ class ZapClient:
                 zap_logger.error("Error receiving data from server")
                 break
 
-            data = json.loads(data)
+            json_data: dict[str, Any] = json.loads(data)
 
             try:
                 event_data = EventData(
-                    data["eventName"], data["payload"], data["headers"]
+                    json_data["eventName"],
+                    json_data.get("payload"),
+                    json_data.get("headers"),
                 )
                 yield event_data
             except Exception:

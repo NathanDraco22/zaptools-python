@@ -21,12 +21,19 @@ class FastApiAdapter(ConnectionAdapter):
     async def recv_json(self) -> dict[str, Any]:
         return await self.websocket.receive_json()
 
-    async def send_event(self, event_name: str, payload: Any, headers: dict[str, Any]):
+    async def send_event(
+        self,
+        event_name: str,
+        payload: Any,
+        headers: dict[str, Any] | None = None,
+    ):
         json_dict: dict[str, Any] = {
             EVENT_KEY: event_name,
             PAYLOAD_KEY: payload,
-            HEADERS_KEY: headers,
         }
+
+        if headers:
+            json_dict[HEADERS_KEY] = headers
 
         await self.websocket.send_json(json_dict)
 
@@ -52,12 +59,19 @@ class SanicAdapter(ConnectionAdapter):
         json_data = json.loads(data)
         return json_data
 
-    async def send_event(self, event_name: str, payload: Any, headers: dict[str, Any]):
+    async def send_event(
+        self,
+        event_name: str,
+        payload: Any,
+        headers: dict[str, Any] | None = None,
+    ):
         json_dict: dict[str, Any] = {
             EVENT_KEY: event_name,
             PAYLOAD_KEY: payload,
-            HEADERS_KEY: headers,
         }
+
+        if headers:
+            json_dict[HEADERS_KEY] = headers
 
         json_str = json.dumps(json_dict)
         await self.websocket.send(json_str)

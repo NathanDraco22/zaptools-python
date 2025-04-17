@@ -36,7 +36,7 @@ class EventData:
         self,
         event_name: str,
         payload: Any,
-        headers: dict[str, Any],
+        headers: dict[str, Any] | None = None,
     ) -> None:
         self.event_name = event_name
         self.payload = payload

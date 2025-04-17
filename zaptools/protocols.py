@@ -18,7 +18,7 @@ class ConnectionAdapter(Protocol):
         self,
         event_name: str,
         payload: Any,
-        headers: dict[str, Any],
+        headers: dict[str, Any] | None = None,
     ) -> None: ...
 
     async def close(self) -> None: ...
