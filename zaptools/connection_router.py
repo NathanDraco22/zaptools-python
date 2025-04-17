@@ -1,5 +1,5 @@
 from typing import Any
-from zaptools.tools import WebSocketConnection
+from zaptools.core import WebSocketConnection
 from zaptools.zap_logger import zap_logger
 
 

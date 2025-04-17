@@ -4,7 +4,7 @@ import asyncio
 from typing import Any, AsyncGenerator
 from websockets.asyncio.client import connect
 
-from .tools import EventData
+from .core.events import EventData
 from .zap_logger import zap_logger
 
 

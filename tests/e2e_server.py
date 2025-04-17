@@ -1,5 +1,5 @@
 from fastapi import FastAPI, WebSocket
-from zaptools.tools import EventRegister, EventContext
+from zaptools import EventRegister, EventContext
 from zaptools.connectors import FastApiConnector
 
 app: FastAPI = FastAPI()
