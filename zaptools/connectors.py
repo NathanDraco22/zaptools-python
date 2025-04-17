@@ -104,27 +104,27 @@ class SanicConnector:
 
     @staticmethod
     async def plug(register: EventRegister, websocket: Any):
-        fastapi_adapter = SanicAdapter(websocket)
+        sanic_adapter = SanicAdapter(websocket)
         event_caller = EventCaller(register._event_book)  # type: ignore
         id_controller = IDController()
 
-        await fastapi_adapter.start_connection()
+        await sanic_adapter.start_connection()
 
         current_id = id_controller.eval()
-        ws_connection = WebSocketConnection(current_id, fastapi_adapter)
+        ws_connection = WebSocketConnection(current_id, sanic_adapter)
 
         return EventProcessor(ws_connection, event_caller)
 
     @staticmethod
     async def plug_and_start(register: EventRegister, websocket: Any):
-        fastapi_adapter = SanicAdapter(websocket)
+        sanic_adapter = SanicAdapter(websocket)
         event_caller = EventCaller(register._event_book)  # type: ignore
         id_controller = IDController()
 
-        await fastapi_adapter.start_connection()
+        await sanic_adapter.start_connection()
 
         current_id = id_controller.eval()
-        ws_connection = WebSocketConnection(current_id, fastapi_adapter)
+        ws_connection = WebSocketConnection(current_id, sanic_adapter)
         event_processor = EventProcessor(ws_connection, event_caller)
 
         await event_processor.start_event_stream()
