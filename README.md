@@ -14,6 +14,7 @@
 | Lang               |Side  |View Source                                                                                           |
 |:------------------:|:----:|:------------------------------------------------------------------------------------------------------|
 |<a href="https://www.python.org" target="_blank"> <img src="https://www.vectorlogo.zone/logos/dartlang/dartlang-icon.svg" alt="python" width="25" height="25"/> </a>| Client/Server |[`zaptools_dart`](https://github.com/NathanDraco22/zaptools-dart)|
+|<a href="https://go.dev" target="_blank"> <img src="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Aqua.svg" alt="python" width="25" height="25"/> </a>| Client/Server |[`zaptools_go`](https://github.com/NathanDraco22/zaptools-go)|
 
 ### Getting Started
 
@@ -169,6 +170,71 @@ async for state in client.connection_state():
         print(state)
 
 ```
+### Connection Router
 
+The ConnectionRouter class allows managing multiple WebSocket connections, providing methods to add, remove, retrieve, and send events to specific connections or all connections.
+
+```python
+# Add a connectin to the router
+ConnectionRouter.add_connection(connection: WebSocketConnection) -> None
+
+# Remove a connection from the router
+ConnectionRouter.remove_connection(connection: WebSocketConnection) -> None
+
+# Retrieve a connection by its ID
+ConnectionRouter.get_connection(id: str) -> WebSocketConnection | None
+
+# Retrieve all connections
+ConnectionRouter.get_all_connections() -> list[WebSocketConnection]
+
+# Broadcast an event to all connections could be have exclusion list
+ConnectionRouter.broadcast(event: str, payload: Any, exclude: list[WebSocketConnection] = [])
+
+# Send an event to a specific connection
+ConnectionRouter.send_to_connection(id: str, event: str, payload: Any) -> bool
+```
+Example:
+
+```python
+from fastapi import FastAPI, WebSocket
+from zaptools import EventRegister, EventContext, ConnectionRouter
+from zaptools.connectors import FastApiConnector
+
+app: FastAPI = FastAPI()
+reg: EventRegister = EventRegister()
+
+connection_router = ConnectionRouter()
+
+
+@reg.on_event("connected")
+async def on_connected_trigger(ctx: EventContext):
+    # add the connection to the router
+    connection_router.add_connection(ctx.connection)
+    # send a event to all connections in the router
+    await connection_router.broadcast(
+        "new-user",
+        "new user connected",
+        exclude=[ctx.connection],  # exclude the sender
+    )
+
+
+@reg.on_event("disconnected")
+async def on_disconnected_trigger(ctx: EventContext):
+    # remove the connection from the router
+    connection_router.remove_connection(ctx.connection)
+    # send a event to all connections in the router
+    await connection_router.broadcast(
+        "user-disconnected",
+        "user disconnected",
+        exclude=[ctx.connection],
+    )
+
+
+@app.websocket("/")
+async def websocket_endpoint(ws: WebSocket):
+    conn = FastApiConnector(register=reg, websocket=ws)
+    await conn.start()
+
+```
 
 ## Contributions are wellcome

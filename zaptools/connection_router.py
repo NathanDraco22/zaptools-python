@@ -1,4 +1,5 @@
-from typing import Any
+import asyncio
+from typing import Any, Coroutine
 from zaptools.core import WebSocketConnection
 from zaptools.zap_logger import zap_logger
 
@@ -43,7 +44,7 @@ class ConnectionRouter:
     async def broadcast(
         self,
         event_name: str,
-        payload: dict[str, Any] = {},
+        payload: Any = None,
         headers: dict[str, Any] | None = None,
         exclude: list[WebSocketConnection] | None = None,
     ) -> None:
@@ -57,10 +58,22 @@ class ConnectionRouter:
             exclude (list[WebSocketConnection] | None, optional): A list of connections to exclude from the broadcast. Defaults to None.
         """
 
+        coros: list[Coroutine] = []
+
         for connection in self.get_all_connections():
             if exclude and connection in exclude:
                 continue
-            await connection.send(event_name, payload, headers)
+
+            coro = self.send_to_connection(
+                connection.id,
+                event_name,
+                payload,
+                headers,
+            )
+            coros.append(coro)
+
+        await asyncio.gather(*coros)
+        return
 
     async def send_to_connection(
         self,
