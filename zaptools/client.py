@@ -51,11 +51,16 @@ class ZapClient:
 
             json_data: dict[str, Any] = json.loads(data)
 
+            headers = json_data.get("headers")
+
+            if not headers:
+                headers = {}
+
             try:
                 event_data = EventData(
                     json_data["eventName"],
                     json_data.get("payload"),
-                    json_data.get("headers"),
+                    headers,
                 )
                 yield event_data
             except Exception:
