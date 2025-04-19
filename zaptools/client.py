@@ -4,7 +4,7 @@ import asyncio
 from typing import Any, AsyncGenerator
 from websockets.asyncio.client import connect
 
-from .tools import EventData
+from .core.events import EventData
 from .zap_logger import zap_logger
 
 
@@ -49,11 +49,18 @@ class ZapClient:
                 zap_logger.error("Error receiving data from server")
                 break
 
-            data = json.loads(data)
+            json_data: dict[str, Any] = json.loads(data)
+
+            headers = json_data.get("headers")
+
+            if not headers:
+                headers = {}
 
             try:
                 event_data = EventData(
-                    data["eventName"], data["payload"], data["headers"]
+                    json_data["eventName"],
+                    json_data.get("payload"),
+                    headers,
                 )
                 yield event_data
             except Exception:
