@@ -32,7 +32,7 @@ class FastApiAdapter(ConnectionAdapter):
             PAYLOAD_KEY: payload,
         }
 
-        if headers:
+        if headers is not None:
             json_dict[HEADERS_KEY] = headers
 
         await self.websocket.send_json(json_dict)
@@ -70,7 +70,7 @@ class SanicAdapter(ConnectionAdapter):
             PAYLOAD_KEY: payload,
         }
 
-        if headers:
+        if headers is not None:
             json_dict[HEADERS_KEY] = headers
 
         json_str = json.dumps(json_dict)
