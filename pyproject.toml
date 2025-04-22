@@ -7,7 +7,7 @@ name = "zaptools"
 description = "A toolkit for Event-Driven websocket management"
 readme = "README.md"
 authors = [{name = "Nathan Mejia", email = "nathandraco22@gmail.com"}]
-version = "0.5.1"
+version = "0.5.2"
 requires-python = ">=3.10"
 classifiers = [
     'Development Status :: 4 - Beta',
@@ -24,6 +24,7 @@ dependencies = [
 
 [project.urls]
 "Homepage" = "https://github.com/NathanDraco22/zaptools-python"
+"Changelog" = "https://github.com/NathanDraco22/zaptools-python/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [

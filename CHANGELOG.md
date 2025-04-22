@@ -1,3 +1,6 @@
+## 0.5.2
+- Added metadata to `pyproject.toml`
+
 ## 0.5.1
 - Added `None` validation to Headers
 - Updated Changelog file
